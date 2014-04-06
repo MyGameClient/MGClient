@@ -53,3 +53,8 @@ public class Item
 	public string name;
 	public string type;
 }
+
+public class Role
+{
+	public float speed;
+}
