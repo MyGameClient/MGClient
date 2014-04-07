@@ -11,7 +11,7 @@ public class Main
 		get{
 			//TODO:
 			Role h = new Role ();
-			h.speed = 60.0f;
+			h.speed = 100.0f;
 			return h;
 
 		}

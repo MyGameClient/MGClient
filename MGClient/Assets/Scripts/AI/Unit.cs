@@ -21,6 +21,8 @@ public class Unit : MonoBehaviour {
 		Right,
 	}
 
+
+	//dir
 	public Dir xDir
 	{
 		get{
@@ -32,6 +34,31 @@ public class Unit : MonoBehaviour {
 			Vector3 v = tkSp.scale;
 			v.x = x;
 			tkSp.scale = v;
+		}
+	}
+
+	//isAttack
+	public bool isAttack
+	{
+		get{
+			return _currentClip == Clip.AOE || _currentClip == Clip.Attack || _currentClip == Clip.AttackLast
+				|| _currentClip == Clip.Hit;
+		}
+	}
+
+	//isHitted
+	public bool isHitted
+	{
+		get{
+			return _currentClip == Clip.Hitted;
+		}
+	}
+
+	//isFall
+	public bool isFall
+	{
+		get{
+			return _currentClip == Clip.Fall;
 		}
 	}
 
@@ -49,6 +76,22 @@ public class Unit : MonoBehaviour {
 
 	}
 
+	private Clip _currentClip;
+	public Clip currentClip
+	{
+		get{
+			return _currentClip;
+		}
+	}
+
+	public float currentClipTime
+	{
+		get
+		{
+			return tkAnt.CurrentClip.fps / tkAnt.CurrentClip.frames.Length;
+		}
+	}
+
 	public void Play (Clip c)
 	{
 		Play (c, null, null);
@@ -58,6 +101,7 @@ public class Unit : MonoBehaviour {
 	{
 		if (tkAnt.CurrentClip.name != c.ToString ())
 		{
+			_currentClip = c;
 			tkAnt.Play (c.ToString ());
 			if (AnimationCompleted != null)
 			{
@@ -68,10 +112,5 @@ public class Unit : MonoBehaviour {
 				tkAnt.AnimationEventTriggered = AnimationEventTriggered;
 			}
 		}
-	}
-
-	public void CompletedPalyStand (tk2dSpriteAnimator a, tk2dSpriteAnimationClip b)
-	{
-		Play (Clip.Stand);
 	}
 }
