@@ -7,6 +7,7 @@ public class PlayerController : Unit {
 
 	void Start () 
 	{
+		CameraController.instance.SetCameraTargetInfo (transform);
 		Init ();
 	}
 
@@ -47,6 +48,8 @@ public class PlayerController : Unit {
 		Vector2 op = new Vector2 (x, y);
 		transform.Translate (op + op * Main.Instance.hero.speed * Time.deltaTime);
 		Vector3 pos = transform.position;
+		pos.x = Mathf.Clamp (pos.x, 0, CameraController.instance.width);
+		pos.y = Mathf.Clamp (pos.y, 0, CameraController.instance.targetMaxHight);
 		pos.z = pos.y;
 		transform.position = pos;
 	}
