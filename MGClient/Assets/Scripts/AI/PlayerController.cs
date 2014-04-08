@@ -93,7 +93,7 @@ public class PlayerController : Unit {
 			{
 				ec.Play (Clip.Hitted);
 				GameObject go = ObjectPool.Instance.LoadObject (MGConstant.EF + "EF001");//TODO:
-				go.transform.position = ec.transform.position + new Vector3 (0, height, 0);//new Vector3 (ec.transform.position.x, height, ec.transform.position.z);
+				go.transform.position = ec.transform.position + new Vector3 (0, height, -10);//new Vector3 (ec.transform.position.x, height, ec.transform.position.z);
 			}
 		}
 	}
