@@ -13,6 +13,7 @@ public class Unit : MonoBehaviour {
 	{
 		tkSp = GetComponent <tk2dSprite>();
 		tkAnt = GetComponent<tk2dSpriteAnimator>();
+		tkAnt.AnimationCompleted = CompletedPalyStand;
 	}
 
 	public enum Dir
@@ -59,6 +60,14 @@ public class Unit : MonoBehaviour {
 	{
 		get{
 			return _currentClip == Clip.Fall;
+		}
+	}
+
+	//hight
+	public float height
+	{
+		get{
+			return tkSp.GetBounds().size.y / 2;
 		}
 	}
 
@@ -112,5 +121,10 @@ public class Unit : MonoBehaviour {
 				tkAnt.AnimationEventTriggered = AnimationEventTriggered;
 			}
 		}
+	}
+
+	void CompletedPalyStand (tk2dSpriteAnimator a, tk2dSpriteAnimationClip b)
+	{
+		Play (Clip.Stand);
 	}
 }

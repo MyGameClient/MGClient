@@ -4,6 +4,8 @@ using System.Collections;
 public class PlayerController : Unit {
 
 	public int maxAtt = 2;
+	//TODO:
+	public float distanceTest = 10;
 
 	void Start () 
 	{
@@ -25,6 +27,10 @@ public class PlayerController : Unit {
 	
 	void inputDirDelegate (Vector2 dir)
 	{
+		if (isAttack == true)
+		{
+			return;
+		}
 		float x = dir.x;
 		float y = dir.y;	
 		if (x != 0 || y != 0)
@@ -33,17 +39,11 @@ public class PlayerController : Unit {
 			{
 				xDir = x > 0 ? Dir.Right : Dir.Left;
 			}
-			if (isAttack == false)
-			{
-				Play (Clip.Walk);
-			}
+			Play (Clip.Walk);
 		}
 		else
 		{
-			if (isAttack == false)
-			{
-				Play(Clip.Stand);
-			}
+			Play(Clip.Stand);
 		}
 		Vector2 op = new Vector2 (x, y);
 		transform.Translate (op + op * Main.Instance.hero.speed * Time.deltaTime);
@@ -72,21 +72,29 @@ public class PlayerController : Unit {
 	{
 		for (int i = (int) Clip.Hit; i < (int) Clip.Hit + atInx; i++)
 		{
-			Play ((Clip) i, CompletedPalyStand, AnimationEventTriggeredAtt);
+			Play ((Clip) i, null, AnimationEventTriggeredAtt);
 			yield return new WaitForSeconds (currentClipTime);
 		}
 		isIng = false;
 		atInx = 0;
 	}
 
-	void CompletedPalyStand (tk2dSpriteAnimator a, tk2dSpriteAnimationClip b)
-	{
-		Play (Clip.Stand);
-	}
-
 	void AnimationEventTriggeredAtt (tk2dSpriteAnimator a, tk2dSpriteAnimationClip b, int c)
 	{
 		//TODO:
+		HitTarget ();
+	}
 
+	void HitTarget ()
+	{
+		foreach(EnemyController ec in EnemyController.enemys)
+		{
+			if (MGMath.isFront (this, ec) && MGMath.attDistance (this, ec, distanceTest))
+			{
+				ec.Play (Clip.Hitted);
+				GameObject go = ObjectPool.Instance.LoadObject (MGConstant.EF + "EF001");//TODO:
+				go.transform.position = new Vector3 (ec.transform.position.x, height, -height);
+			}
+		}
 	}
 }
