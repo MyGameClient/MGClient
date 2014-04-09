@@ -5,7 +5,8 @@ public class PlayerController : Unit {
 
 	public int maxAtt = 2;
 	//TODO:
-	public float distanceTest = 10;
+	public float distanceTest = 400;
+	public float attMoveDis = 15;
 
 	void Start () 
 	{
@@ -83,6 +84,13 @@ public class PlayerController : Unit {
 	{
 		//TODO:
 		HitTarget ();
+		MoveForwrd ();
+	}
+
+	void MoveForwrd ()
+	{
+		Vector3 v = ((xDir == Dir.Right) ? 1 : -1) * new Vector3 (attMoveDis, 0, 0);
+		TweenPosition.Begin (gameObject, 0.1f, MGMath.getClampPos(v + transform.position));
 	}
 
 	void HitTarget ()
@@ -91,9 +99,9 @@ public class PlayerController : Unit {
 		{
 			if (MGMath.isFront (this, ec) && MGMath.attDistance (this, ec, distanceTest))
 			{
-				ec.Play (Clip.Hitted);
 				GameObject go = ObjectPool.Instance.LoadObject (MGConstant.EF + "EF001");//TODO:
 				go.transform.position = ec.transform.position + new Vector3 (0, height, -10);//new Vector3 (ec.transform.position.x, height, ec.transform.position.z);
+				ec.Hitted ();
 			}
 		}
 	}

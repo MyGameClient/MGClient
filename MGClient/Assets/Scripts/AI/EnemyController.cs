@@ -19,4 +19,17 @@ public class EnemyController : Unit {
 	{
 		Init ();
 	}
+
+	public void Hitted()
+	{
+		Play (Clip.Hitted);
+		CancelInvoke ("resetColor");
+		Invoke ("resetColor", 0.1f);
+		tkSp.color = Color.red;
+	}
+
+	public void resetColor ()
+	{
+		tkSp.color = Color.white;
+	}
 }

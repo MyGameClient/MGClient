@@ -7,8 +7,6 @@ public class MGMath {
 	{
 		float x = Mathf.Abs(def.transform.position.x - att.transform.position.x);
 		float y = Mathf.Abs(def.transform.position.y - att.transform.position.y);
-//		Debug.Log (x + "__x__" + disVal / 2);
-//		Debug.Log (y + "__x__" + disVal / 4);
 		return x <= disVal / 2 && y <= disVal / 10;
 	}
 
@@ -23,6 +21,13 @@ public class MGMath {
 			return def.transform.position.x < att.transform.position.x;
 		}
 		return false;
+	}
+
+	public static Vector3 getClampPos (Vector3 v)
+	{
+		float x = Mathf.Clamp (v.x, 0, CameraController.instance.width);
+		float y = Mathf.Clamp (v.y, 0, CameraController.instance.targetMaxHight);
+		return new Vector3 (x, y, y);
 	}
 
 }
