@@ -12,11 +12,11 @@ public class MGMath {
 
 	public static bool isFront (Unit att, Unit def)
 	{
-		if (att.xDir == Unit.Dir.Right)
+		if (att.xDir == Dir.Right)
 		{
 			return def.transform.position.x >= att.transform.position.x;
 		}
-		else if (att.xDir == Unit.Dir.Left)
+		else if (att.xDir == Dir.Left)
 		{
 			return def.transform.position.x < att.transform.position.x;
 		}
@@ -28,6 +28,11 @@ public class MGMath {
 		float x = Mathf.Clamp (v.x, 0, CameraController.instance.width);
 		float y = Mathf.Clamp (v.y, 0, CameraController.instance.targetMaxHight);
 		return new Vector3 (x, y, y);
+	}
+
+	public static float getDirNumber (Unit u)
+	{
+		return (u.xDir == Dir.Right) ? 1 : -1;
 	}
 
 }

@@ -4,7 +4,7 @@ using System.Collections;
 public class PlayerController : Unit {
 
 	public int maxAtt = 2;
-	//TODO:
+	//TODO: need data
 	public float distanceTest = 400;
 	public float attMoveDis = 15;
 
@@ -73,8 +73,11 @@ public class PlayerController : Unit {
 	{
 		for (int i = (int) Clip.Hit; i < (int) Clip.Hit + atInx; i++)
 		{
-			Play ((Clip) i, null, AnimationEventTriggeredAtt);
-			yield return new WaitForSeconds (currentClipTime);
+			if (isHitted == false && isFall == false)
+			{
+				Play ((Clip) i, null, AnimationEventTriggeredAtt);
+				yield return new WaitForSeconds (currentClipTime);
+			}
 		}
 		isIng = false;
 		atInx = 0;
@@ -87,21 +90,26 @@ public class PlayerController : Unit {
 		MoveForwrd ();
 	}
 
-	void MoveForwrd ()
+
+	//hit Mothed
+	private void MoveForwrd ()
 	{
-		Vector3 v = ((xDir == Dir.Right) ? 1 : -1) * new Vector3 (attMoveDis, 0, 0);
-		TweenPosition.Begin (gameObject, 0.1f, MGMath.getClampPos(v + transform.position));
+		TweenPosition.Begin (gameObject, 0.1f, MGMath.getClampPos(new Vector3 (attMoveDis * MGMath.getDirNumber (this), 0, 0) + transform.position));
 	}
 
-	void HitTarget ()
+	private void HitTarget ()
 	{
 		foreach(EnemyController ec in EnemyController.enemys)
 		{
 			if (MGMath.isFront (this, ec) && MGMath.attDistance (this, ec, distanceTest))
 			{
-				GameObject go = ObjectPool.Instance.LoadObject (MGConstant.EF + "EF001");//TODO:
-				go.transform.position = ec.transform.position + new Vector3 (0, height, -10);//new Vector3 (ec.transform.position.x, height, ec.transform.position.z);
-				ec.Hitted ();
+				if (ec.isFall == false)
+				{
+					GameObject go = ObjectPool.Instance.LoadObject (MGConstant.EF + "EF001");//TODO:"EF001" need data
+					go.transform.position = ec.transform.position + new Vector3 (0, height, -10);//new Vector3 (ec.transform.position.x, height, ec.transform.position.z);
+					ec.Hitted (currentClip == Clip.AttackLast ? Clip.Fall : Clip.Hitted);
+					ec.HittedMove (attMoveDis * MGMath.getDirNumber (this), this);
+				}
 			}
 		}
 	}

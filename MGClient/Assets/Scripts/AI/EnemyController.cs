@@ -20,9 +20,20 @@ public class EnemyController : Unit {
 		Init ();
 	}
 
-	public void Hitted()
+
+	//hited method
+	public void HittedMove (float target, Unit att)
 	{
-		Play (Clip.Hitted);
+		if (!MGMath.isFront (this, att))
+		{
+			xDir = (xDir == Dir.Left) ? Dir.Right : Dir.Left;
+		}
+		TweenPosition.Begin (gameObject, 0.1f, MGMath.getClampPos (transform.position + new Vector3 (target, 0, 0)));
+	}
+
+	public void Hitted(Clip c)
+	{
+		Play (c);
 		CancelInvoke ("resetColor");
 		Invoke ("resetColor", 0.1f);
 		tkSp.color = Color.red;

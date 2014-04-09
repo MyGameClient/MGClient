@@ -2,6 +2,26 @@
 using System.Collections;
 using System;
 
+public enum Dir
+{
+	Left,
+	Right,
+}
+
+public enum Clip
+{
+	Stand = 0,
+	Walk,
+	Hit,
+	AttackLast,
+	Attack,
+	AOE,
+	Hitted,
+	Fall,
+	Die
+	
+}
+
 public class Unit : MonoBehaviour {
 
 	[HideInInspector]
@@ -15,13 +35,6 @@ public class Unit : MonoBehaviour {
 		tkAnt = GetComponent<tk2dSpriteAnimator>();
 		tkAnt.AnimationCompleted = CompletedPalyStand;
 	}
-
-	public enum Dir
-	{
-		Left,
-		Right,
-	}
-
 
 	//dir
 	public Dir xDir
@@ -69,20 +82,6 @@ public class Unit : MonoBehaviour {
 		get{
 			return tkSp.GetBounds().size.y / 2;
 		}
-	}
-
-	public enum Clip
-	{
-		Stand = 0,
-		Walk,
-		Hit,
-		AttackLast,
-		Attack,
-		AOE,
-		Hitted,
-		Fall,
-		Die
-
 	}
 
 	private Clip _currentClip;
