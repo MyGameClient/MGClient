@@ -21,8 +21,8 @@ public class PlayerInput : MonoBehaviour {
 				inputAttDelegate ();
 			}
 		}
-#elif UNITY_ANDROID
-		dirIndex = ;
+#elif UNITY_ANDROID || UNITY_IPHONE
+		dirIndex = new Vector2(JoystickC.instance.position.x, JoystickC.instance.position.y);
 #endif
 		if (inputDirDelegate != null)
 		{

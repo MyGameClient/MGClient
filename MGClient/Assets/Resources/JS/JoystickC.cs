@@ -2,7 +2,9 @@ using UnityEngine;
 using System.Collections;
 
 public class JoystickC : MonoBehaviour {
-	
+
+	public static JoystickC instance;
+
 	private Vector2 min = Vector2.zero;
 	private Vector2 max = Vector2.zero;
 
@@ -33,7 +35,12 @@ public class JoystickC : MonoBehaviour {
 	
 	void Awake ()
 	{
-		//gameObject.SetActive(false);
+#if UNITY_EDITOR
+		gameObject.SetActive (false);
+#elif UNITY_ANDROID || UNITY_IPHONE
+		instance = this;
+		gameObject.SetActive (true);
+#endif
 	}
 	
 	// Use this for initialization
