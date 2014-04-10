@@ -1,27 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
+using RD = UnityEngine.Random;
 
 public class MGMath {
-
-	public static bool attDistance (Unit att, Unit def, float disVal)
-	{
-		float x = Mathf.Abs(def.transform.position.x - att.transform.position.x);
-		float y = Mathf.Abs(def.transform.position.y - att.transform.position.y);
-		return x <= disVal / 2 && y <= disVal / 10;
-	}
-
-	public static bool isFront (Unit att, Unit def)
-	{
-		if (att.xDir == Dir.Right)
-		{
-			return def.transform.position.x >= att.transform.position.x;
-		}
-		else if (att.xDir == Dir.Left)
-		{
-			return def.transform.position.x < att.transform.position.x;
-		}
-		return false;
-	}
 
 	public static Vector3 getClampPos (Vector3 v)
 	{
@@ -33,6 +14,19 @@ public class MGMath {
 	public static float getDirNumber (Unit u)
 	{
 		return (u.xDir == Dir.Right) ? 1 : -1;
+	}
+
+	public static float getDist2D (Vector3 start, Vector3 end)
+	{
+		start.z = 0;
+		end.z = 0;
+		return Mathf.Sqrt ((start - end).sqrMagnitude);
+	}
+
+	public static Vector3 getRandom (Transform target, float randge)
+	{
+		Vector3 v = new Vector3 (target.position.x + RD.Range (-randge, randge), target.position.y + RD.Range (-randge, randge), 0);
+		return getClampPos (v);
 	}
 
 }

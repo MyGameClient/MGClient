@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class PlayerController : Unit {
 
@@ -8,6 +9,12 @@ public class PlayerController : Unit {
 	public float distanceTest = 400;
 	public float attMoveDis = 15;
 
+	public static List<PlayerController> players = new List<PlayerController> ();
+	
+	void Awake () {
+		players.Add (this);
+	}
+	
 	void Start () 
 	{
 		CameraController.instance.SetCameraTargetInfo (transform);
@@ -22,13 +29,14 @@ public class PlayerController : Unit {
 
 	void OnDisable ()
 	{
+		players.Remove (this);
 		PlayerInput.inputAttDelegate -= inputAttDelegate;
 		PlayerInput.inputDirDelegate -= inputDirDelegate;
 	}
 	
 	void inputDirDelegate (Vector2 dir)
 	{
-		if (isAttack == true)
+		if (isAttack == true || isFall == true)
 		{
 			return;
 		}
@@ -40,11 +48,10 @@ public class PlayerController : Unit {
 			{
 				xDir = x > 0 ? Dir.Right : Dir.Left;
 			}
-			Play (Clip.Walk);
 		}
-		else
+		if (isHitted == false)
 		{
-			Play(Clip.Stand);
+			Play((x != 0 || y != 0) ? Clip.Walk : Clip.Stand);
 		}
 		Vector2 op = new Vector2 (x, y);
 		transform.Translate (op + op * Main.Instance.hero.speed * Time.deltaTime);
@@ -91,26 +98,29 @@ public class PlayerController : Unit {
 	}
 
 
-	//hit Mothed
+	#region Hit Method
 	private void MoveForwrd ()
 	{
-		TweenPosition.Begin (gameObject, 0.1f, MGMath.getClampPos(new Vector3 (attMoveDis * MGMath.getDirNumber (this), 0, 0) + transform.position));
+		tweenPosition = TweenPosition.Begin (gameObject, 0.1f, MGMath.getClampPos(new Vector3 (attMoveDis * MGMath.getDirNumber (this), 0, 0) + transform.position));
 	}
 
 	private void HitTarget ()
 	{
 		foreach(EnemyController ec in EnemyController.enemys)
 		{
-			if (MGMath.isFront (this, ec) && MGMath.attDistance (this, ec, distanceTest))
+			if (Unit.isFront (this, ec) && Unit.attDistance (this, ec, distanceTest))
 			{
 				if (ec.isFall == false)
 				{
-					GameObject go = ObjectPool.Instance.LoadObject (MGConstant.EF + "EF001");//TODO:"EF001" need data
-					go.transform.position = ec.transform.position + new Vector3 (0, height, -10);//new Vector3 (ec.transform.position.x, height, ec.transform.position.z);
+					AddEF ("EF001", ec);//TODO:"EF001" need data
 					ec.Hitted (currentClip == Clip.AttackLast ? Clip.Fall : Clip.Hitted);
 					ec.HittedMove (attMoveDis * MGMath.getDirNumber (this), this);
 				}
 			}
 		}
 	}
+	#endregion
+
+	#region Hitted Method
+	#endregion
 }

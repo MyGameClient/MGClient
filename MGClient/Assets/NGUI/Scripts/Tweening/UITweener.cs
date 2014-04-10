@@ -30,12 +30,15 @@ public abstract class UITweener : IgnoreTimeScale
 	}
 
 	public delegate void OnFinished (UITweener tween);
+	public delegate void OnUpdateDelegate ();
 
 	/// <summary>
 	/// Delegate for subscriptions. Faster than using the 'eventReceiver' and allows for multiple receivers.
 	/// </summary>
 
 	public OnFinished onFinished;
+
+	public OnUpdateDelegate onUpdate;
 
 	/// <summary>
 	/// Tweening method used.
@@ -259,6 +262,10 @@ public abstract class UITweener : IgnoreTimeScale
 			val = 1f - BounceLogic(1f - val);
 		}
 
+		if (onUpdate != null)
+		{
+			onUpdate ();
+		}
 		// Call the virtual update
 		OnUpdate((animationCurve != null) ? animationCurve.Evaluate(val) : val, isFinished);
 	}

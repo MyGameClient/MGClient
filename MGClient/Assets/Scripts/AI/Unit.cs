@@ -24,6 +24,9 @@ public enum Clip
 
 public class Unit : MonoBehaviour {
 
+
+	protected TweenPosition tweenPosition;
+
 	[HideInInspector]
 	public tk2dSprite tkSp;
 	[HideInInspector]
@@ -122,8 +125,68 @@ public class Unit : MonoBehaviour {
 		}
 	}
 
-	void CompletedPalyStand (tk2dSpriteAnimator a, tk2dSpriteAnimationClip b)
+	public void CompletedPalyStand (tk2dSpriteAnimator a, tk2dSpriteAnimationClip b)
 	{
 		Play (Clip.Stand);
+	}
+
+	#region Hit or hitted method
+	public void Hitted(Clip c)
+	{
+		Play (c);
+		colorRed ();
+	}
+	public void colorRed ()
+	{
+		TweenTk2dColor.Begin (gameObject, 0.25f, Color.red).onFinished = resetColor;
+	}
+	public void resetColor (UITweener u)
+	{
+		TweenTk2dColor.Begin (gameObject, 0.25f, Color.white).onFinished = null;
+	}
+	public void HittedMove (float target, Unit att)
+	{
+		if (!Unit.isFront (this, att))
+		{
+			xDir = (xDir == Dir.Left) ? Dir.Right : Dir.Left;
+		}
+		stop ();
+		tweenPosition = TweenPosition.Begin (gameObject, 0.1f, MGMath.getClampPos (transform.position + new Vector3 (target, 0, 0)));
+	}
+	protected void stop ()
+	{
+		if (tweenPosition != null)
+		{
+			tweenPosition.onUpdate = null;
+			tweenPosition.enabled = false;
+		}
+	}
+
+	public void AddEF (string path, Unit u)
+	{
+		GameObject go = ObjectPool.Instance.LoadObject (MGConstant.EF + path);
+		go.transform.position = u.transform.position + new Vector3 (0, u.height, -10);//new Vector3 (ec.transform.position.x, height, ec.transform.position.z);
+	}
+
+	#endregion
+
+	public static bool attDistance (Unit att, Unit def, float disVal)
+	{
+		float x = Mathf.Abs(def.transform.position.x - att.transform.position.x);
+		float y = Mathf.Abs(def.transform.position.y - att.transform.position.y);
+		return x <= disVal / 2 && y <= disVal / 10;
+	}
+	
+	public static bool isFront (Unit att, Unit def)
+	{
+		if (att.xDir == Dir.Right)
+		{
+			return def.transform.position.x >= att.transform.position.x;
+		}
+		else if (att.xDir == Dir.Left)
+		{
+			return def.transform.position.x < att.transform.position.x;
+		}
+		return false;
 	}
 }

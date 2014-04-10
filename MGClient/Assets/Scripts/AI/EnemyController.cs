@@ -2,45 +2,160 @@
 using System.Collections;
 using System.Collections.Generic;
 
+public enum State
+{
+	Walk = 0,
+	Stand,
+	Hit,
+	Max = 3
+}
+
 public class EnemyController : Unit {
 
+	public float MSRate = 2.0f;//TODO: LEVEL DATA
+	public float speed = 100.0f;//TODO: MS DATA
+	public float randge = 100.0f;//TODO: MS DATA
+	public float distanceTest = 400;//TODO: MS DATA
+	public float attMoveDis = 15;//TODO: MS DATA
+
+
 	public static List<EnemyController> enemys = new List<EnemyController> ();
-	
+
+
+	private int MAX = 0;
+	private State _state = State.Max;
+	public State state
+	{
+		get{
+			return _state;
+		}
+	}
+	private PlayerController target
+	{
+		get{
+			//TODO: Should find hate max
+			return PlayerController.players[0];
+		}
+	}
+
 	void Awake () {
+		MAX = (int) State.Max;
 		enemys.Add (this);
 	}
 
 	void OnDisable ()
 	{
+		CancelAI ();
 		enemys.Remove (this);
 	}
 
 	void Start ()
 	{
 		Init ();
+		tkAnt.AnimationEventTriggered = AnimationEventTriggeredAtt;
+		StartAI ();
 	}
 
-
-	//hited method
-	public void HittedMove (float target, Unit att)
+	#region Hit States Method
+	void StartAI ()
 	{
-		if (!MGMath.isFront (this, att))
+		InvokeRepeating ("UpdatAI", 0, MSRate);
+	}
+	void CancelAI ()
+	{
+		CancelInvoke ("UpdatAI");
+	}
+	void UpdatAI ()
+	{
+		if ((isFall == true || isHitted == true) && _state == State.Hit)
 		{
-			xDir = (xDir == Dir.Left) ? Dir.Right : Dir.Left;
+			return;
 		}
-		TweenPosition.Begin (gameObject, 0.1f, MGMath.getClampPos (transform.position + new Vector3 (target, 0, 0)));
+		_state = (State) Random.Range (0, MAX);
+		switch (_state)
+		{
+			case State.Stand:
+				Stand ();
+				break;
+			case State.Walk:
+				randomWalk (MGMath.getRandom (transform, randge));
+				break;
+			case State.Hit:
+				if (target != null)
+				{
+					randomWalk (target.transform.position);
+				}
+				else
+				{
+					_state = State.Walk;
+					randomWalk (MGMath.getRandom (transform, randge));
+				}
+			break;
+		}
 	}
 
-	public void Hitted(Clip c)
+	//stand
+	void Stand ()
 	{
-		Play (c);
-		CancelInvoke ("resetColor");
-		Invoke ("resetColor", 0.1f);
-		tkSp.color = Color.red;
+		stop ();
+		CompletedPalyStand (null, null);
 	}
 
-	public void resetColor ()
+	//walk
+	void randomWalk (Vector3 target)
 	{
-		tkSp.color = Color.white;
+		xDir = (target.x > transform.position.x) ? Dir.Right : Dir.Left;
+
+		tweenPosition = TweenPosition.Begin (gameObject, MGMath.getDist2D (transform.position, MGMath.getClampPos (target)) / speed, MGMath.getClampPos (target));
+		Play (Clip.Walk);
+		tweenPosition.onUpdate = onUpdate;
+		tweenPosition.onFinished = onFinished;
 	}
+	void onUpdate ()
+	{
+		//TODO:
+		if (state == State.Hit)
+		{
+			Hit ();
+		}
+	}
+	void onFinished (UITweener t)
+	{
+		if (_state == State.Hit)
+		{
+			_state = State.Max;
+		}
+		CompletedPalyStand (null, null);
+	}
+
+	void Hit ()
+	{
+		if (isFall == true)
+		{
+			return;
+		}
+		if (Unit.attDistance (this, target, distanceTest) == true)
+		{
+			if (Unit.isFront (this, target) == false)
+			{
+				xDir = (xDir == Dir.Left) ? Dir.Right : Dir.Left;
+			}
+			stop ();
+			Play (Clip.Hit);
+		}
+	}
+	void AnimationEventTriggeredAtt (tk2dSpriteAnimator a, tk2dSpriteAnimationClip b, int c)
+	{
+		if (Unit.attDistance (this, target, distanceTest) == true)
+		{
+			target.AddEF ("EF001", target);
+			target.Hitted (Clip.Hitted);
+			target.HittedMove (attMoveDis * MGMath.getDirNumber (this), this);
+		}
+	}
+	#endregion
+
+
+	#region Hitted Method
+	#endregion
 }
