@@ -16,7 +16,7 @@ public class EnemyController : Unit {
 	public float speed = 100.0f;//TODO: MS DATA
 	public float randge = 100.0f;//TODO: MS DATA
 	public float distanceTest = 400;//TODO: MS DATA
-	public float attMoveDis = 15;//TODO: MS DATA
+	public float attMoveDis = 30;//TODO: MS DATA
 
 
 	public static List<EnemyController> enemys = new List<EnemyController> ();

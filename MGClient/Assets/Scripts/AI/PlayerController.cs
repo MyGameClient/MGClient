@@ -59,7 +59,7 @@ public class PlayerController : Unit {
 				xDir = x > 0 ? Dir.Right : Dir.Left;
 			}
 		}
-		if (isHitted == false)
+		if (isHitted == false || currentClip != Clip.spell2)
 		{
 			Play((x != 0 || y != 0) ? Clip.Walk : Clip.Stand);
 		}
@@ -139,6 +139,10 @@ public class PlayerController : Unit {
 	#region spell
 	public void assault ()
 	{
+		if (isFall == true && isHitted ==true)
+		{
+			return;
+		}
 		float dir = MGMath.getDirNumber (this);
 		MoveToTarget (transform.position + new Vector3 (dir * spell.distance, 0, 0), spell.spd);
 		Play (Clip.spell0);
@@ -166,19 +170,58 @@ public class PlayerController : Unit {
 
 	public void JumpAtt ()
 	{
+		if (isFall == true && isHitted ==true)
+		{
+			return;
+		}
 		MoveForwrd ();
 		Play (Clip.spell1, null, AnimationEventTriggeredAtt);
+	}
+
+	void cyclone ()
+	{
+		if (isFall == true && isHitted ==true)
+		{
+			return;
+		}
+		Play (Clip.spell2, null, AnimationEventTriggeredAtt);
+		InvokeRepeating ("UpdateDmg", 0, 0.25f);
+		Debug.Log (currentClipTime);
+		Invoke ("cancel", currentClipTime);
+	}
+	void cancel ()
+	{
+		CancelInvoke ("UpdateDmg");
+	}
+	void UpdateDmg ()
+	{
+		if (isFall == true || isHitted == true)
+		{
+			cancel();
+		}
+		foreach(EnemyController ec in EnemyController.enemys)
+		{
+			if (Unit.attDistance (this, ec, distanceTest))
+			{
+				if (ec.isFall == false)
+				{
+					AddEF ("EF001", ec);//TODO:"EF001" need data
+					ec.Hitted (Clip.Hitted);
+					ec.HittedMove (attMoveDis * MGMath.getDirNumber (this), this);
+				}
+			}
+		}
 	}
 	#endregion
 
 
 	#region DEBUG
-	public const int max = 2;
+	public const int max = 3;
 	void OnGUI ()
 	{
 		for (int i = 0; i < max; i++)
 		{
-			if (GUI.Button (new Rect (100 * i,Screen.height - 100, 100, 100), "spell" + i.ToString()))
+			if (GUI.Button (new Rect (100 * i,Screen.height / 2, 100, 100), "spell" + i.ToString()))
 			{
 				test (i);
 			}
@@ -190,9 +233,13 @@ public class PlayerController : Unit {
 		{
 			assault ();
 		}
-		else if (1 == 1)
+		else if (i == 1)
 		{
 			JumpAtt ();
+		}
+		else if (i == 2)
+		{
+			cyclone ();
 		}
 	}
 	#endregion

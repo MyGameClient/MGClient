@@ -20,6 +20,7 @@ public enum Clip
 	Fall,
 	spell0,
 	spell1,
+	spell2,
 	Die
 	
 }
@@ -62,6 +63,7 @@ public abstract class Unit : MonoBehaviour {
 		get{
 			return _currentClip == Clip.AOE || _currentClip == Clip.Attack || _currentClip == Clip.AttackLast
 				|| _currentClip == Clip.Hit || _currentClip == Clip.spell0 || _currentClip == Clip.spell1;
+					//|| _currentClip == Clip.spell2;
 		}
 	}
 
@@ -108,7 +110,7 @@ public abstract class Unit : MonoBehaviour {
 	{
 		get
 		{
-			return tkAnt.CurrentClip.fps / tkAnt.CurrentClip.frames.Length;
+			return tkAnt.CurrentClip.frames.Length / tkAnt.CurrentClip.fps;
 		}
 	}
 
