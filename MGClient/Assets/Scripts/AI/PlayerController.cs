@@ -2,7 +2,17 @@
 using System.Collections;
 using System.Collections.Generic;
 
+public class Spell
+{
+	public float distance = 400;
+	public float spd = 1500;
+	public float attDistance = 200;
+}
+
 public class PlayerController : Unit {
+
+	//spell
+	Spell spell = new Spell ();
 
 	public int maxAtt = 2;
 	//TODO: need data
@@ -113,7 +123,7 @@ public class PlayerController : Unit {
 				if (ec.isFall == false)
 				{
 					AddEF ("EF001", ec);//TODO:"EF001" need data
-					ec.Hitted (currentClip == Clip.AttackLast ? Clip.Fall : Clip.Hitted);
+					ec.Hitted (currentClip == Clip.AttackLast || currentClip == Clip.spell1 ? Clip.Fall : Clip.Hitted);
 					ec.HittedMove (attMoveDis * MGMath.getDirNumber (this), this);
 				}
 			}
@@ -125,4 +135,65 @@ public class PlayerController : Unit {
 	#endregion
 	public override void ExtraInfo ()
 	{}
+
+	#region spell
+	public void assault ()
+	{
+		float dir = MGMath.getDirNumber (this);
+		MoveToTarget (transform.position + new Vector3 (dir * spell.distance, 0, 0), spell.spd);
+		Play (Clip.spell0);
+		tweenPosition.onUpdate = onUpdateAssault;
+		tweenPosition.onFinished = onFinishAssault;
+	}
+	void onUpdateAssault()
+	{
+		foreach(EnemyController ec in EnemyController.enemys)
+		{
+			if (Unit.isFront (this, ec) && Unit.attDistance (this, ec, distanceTest))
+			{
+				if (ec.isFall == false)
+				{
+					ec.Hitted (Clip.Hitted);
+					ec.HittedMove (Mathf.Abs(transform.position.x - tweenPosition.to.x) * MGMath.getDirNumber (this), this);
+				}
+			}
+		}
+	}
+	void onFinishAssault (UITweener u)
+	{
+		tweenPosition.onUpdate = null;
+	}
+
+	public void JumpAtt ()
+	{
+		MoveForwrd ();
+		Play (Clip.spell1, null, AnimationEventTriggeredAtt);
+	}
+	#endregion
+
+
+	#region DEBUG
+	public const int max = 2;
+	void OnGUI ()
+	{
+		for (int i = 0; i < max; i++)
+		{
+			if (GUI.Button (new Rect (100 * i,Screen.height - 100, 100, 100), "spell" + i.ToString()))
+			{
+				test (i);
+			}
+		}
+	}
+	void test(int i)
+	{
+		if (i == 0)
+		{
+			assault ();
+		}
+		else if (1 == 1)
+		{
+			JumpAtt ();
+		}
+	}
+	#endregion
 }

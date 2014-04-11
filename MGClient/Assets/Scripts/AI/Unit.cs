@@ -18,6 +18,8 @@ public enum Clip
 	AOE,
 	Hitted,
 	Fall,
+	spell0,
+	spell1,
 	Die
 	
 }
@@ -59,7 +61,7 @@ public abstract class Unit : MonoBehaviour {
 	{
 		get{
 			return _currentClip == Clip.AOE || _currentClip == Clip.Attack || _currentClip == Clip.AttackLast
-				|| _currentClip == Clip.Hit;
+				|| _currentClip == Clip.Hit || _currentClip == Clip.spell0 || _currentClip == Clip.spell1;
 		}
 	}
 
@@ -84,6 +86,13 @@ public abstract class Unit : MonoBehaviour {
 	{
 		get{
 			return tkSp.GetBounds().size.y / 2;
+		}
+	}
+
+	public bool isMove
+	{
+		get{
+			return tweenPosition != null && tweenPosition.enabled;
 		}
 	}
 
@@ -146,6 +155,12 @@ public abstract class Unit : MonoBehaviour {
 	public void resetColor (UITweener u)
 	{
 		TweenTk2dColor.Begin (gameObject, 0.25f, Color.white).onFinished = null;
+	}
+	public void MoveToTarget (Vector3 target, float speed)
+	{
+		xDir = (target.x > transform.position.x) ? Dir.Right : Dir.Left;
+		
+		tweenPosition = TweenPosition.Begin (gameObject, MGMath.getDist2D (transform.position, MGMath.getClampPos (target)) / speed, MGMath.getClampPos (target));
 	}
 	public void HittedMove (float target, Unit att)
 	{

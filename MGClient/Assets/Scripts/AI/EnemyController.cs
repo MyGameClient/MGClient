@@ -73,7 +73,10 @@ public class EnemyController : Unit {
 		}
 		if (_state == State.Hit)
 		{
-			return;
+			if (isAttack == true)
+			{
+				return;
+			}
 		}
 		_state = (State) Random.Range (0, MAX);
 		switch (_state)
@@ -108,9 +111,7 @@ public class EnemyController : Unit {
 	//walk
 	void randomWalk (Vector3 target)
 	{
-		xDir = (target.x > transform.position.x) ? Dir.Right : Dir.Left;
-
-		tweenPosition = TweenPosition.Begin (gameObject, MGMath.getDist2D (transform.position, MGMath.getClampPos (target)) / speed, MGMath.getClampPos (target));
+		MoveToTarget (target, speed);
 		Play (Clip.Walk);
 		tweenPosition.onUpdate = onUpdate;
 		tweenPosition.onFinished = onFinished;
@@ -127,7 +128,8 @@ public class EnemyController : Unit {
 	{
 		if (_state == State.Hit)
 		{
-			_state = State.Max;
+			Hit ();
+			//_state = State.Max;
 		}
 		CompletedPalyStand (null, null);
 	}
@@ -156,7 +158,7 @@ public class EnemyController : Unit {
 			target.Hitted (Clip.Hitted);
 			target.HittedMove (attMoveDis * MGMath.getDirNumber (this), this);
 		}
-		_state = State.Max;
+		//_state = State.Max;
 	}
 	#endregion
 
@@ -165,6 +167,6 @@ public class EnemyController : Unit {
 	#endregion
 	public override void ExtraInfo ()
 	{
-		_state = State.Max;
+		//_state = State.Max;
 	}
 }

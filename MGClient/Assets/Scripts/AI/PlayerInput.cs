@@ -14,7 +14,7 @@ public class PlayerInput : MonoBehaviour {
 	void Update () {
 #if UNITY_EDITOR
 		dirIndex = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
-		if (Input.GetMouseButtonDown (0))
+		if (Input.GetMouseButtonDown (1))
 		{
 			if (inputAttDelegate != null)
 			{
