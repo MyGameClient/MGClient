@@ -22,7 +22,7 @@ public enum Clip
 	
 }
 
-public class Unit : MonoBehaviour {
+public abstract class Unit : MonoBehaviour {
 
 
 	protected TweenPosition tweenPosition;
@@ -131,6 +131,9 @@ public class Unit : MonoBehaviour {
 	}
 
 	#region Hit or hitted method
+
+	public abstract void ExtraInfo ();
+
 	public void Hitted(Clip c)
 	{
 		Play (c);
@@ -155,6 +158,7 @@ public class Unit : MonoBehaviour {
 	}
 	protected void stop ()
 	{
+		ExtraInfo ();
 		if (tweenPosition != null)
 		{
 			tweenPosition.onUpdate = null;

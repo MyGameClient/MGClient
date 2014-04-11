@@ -123,4 +123,6 @@ public class PlayerController : Unit {
 
 	#region Hitted Method
 	#endregion
+	public override void ExtraInfo ()
+	{}
 }

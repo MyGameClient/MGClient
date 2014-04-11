@@ -67,7 +67,11 @@ public class EnemyController : Unit {
 	}
 	void UpdatAI ()
 	{
-		if ((isFall == true || isHitted == true) && _state == State.Hit)
+		if ((isFall == true || isHitted == true))
+		{
+			return;
+		}
+		if (_state == State.Hit)
 		{
 			return;
 		}
@@ -152,10 +156,15 @@ public class EnemyController : Unit {
 			target.Hitted (Clip.Hitted);
 			target.HittedMove (attMoveDis * MGMath.getDirNumber (this), this);
 		}
+		_state = State.Max;
 	}
 	#endregion
 
 
 	#region Hitted Method
 	#endregion
+	public override void ExtraInfo ()
+	{
+		_state = State.Max;
+	}
 }
