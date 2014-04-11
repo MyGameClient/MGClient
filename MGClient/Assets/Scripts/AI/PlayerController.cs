@@ -18,6 +18,15 @@ public class PlayerController : Unit {
 	//TODO: need data
 	public float distanceTest = 400;
 	public float attMoveDis = 15;
+	public float attDmg = 200;
+
+
+	private float dmg
+	{
+		get{
+			return Random.Range (attDmg - 10, attDmg + 10);
+		}
+	}
 
 	public static List<PlayerController> players = new List<PlayerController> ();
 	
@@ -123,6 +132,8 @@ public class PlayerController : Unit {
 				if (ec.isFall == false)
 				{
 					AddEF ("EF001", ec);//TODO:"EF001" need data
+					bool isBig = Random.Range (0, 2) == 1;
+					AddDMG ("NUM001", ec, dmg * (isBig ? 2 : 1), isBig);
 					ec.Hitted (currentClip == Clip.AttackLast || currentClip == Clip.spell1 ? Clip.Fall : Clip.Hitted);
 					ec.HittedMove (attMoveDis * MGMath.getDirNumber (this), this);
 				}
@@ -157,6 +168,8 @@ public class PlayerController : Unit {
 			{
 				if (ec.isFall == false)
 				{
+					bool isBig = Random.Range (0, 2) == 1;
+					AddDMG ("NUM001", ec, dmg * (isBig ? 2 : 1), isBig);
 					ec.Hitted (Clip.Hitted);
 					//ec.HittedMove (Mathf.Abs(transform.position.x - tweenPosition.to.x) * MGMath.getDirNumber (this), this);
 				}
@@ -176,6 +189,7 @@ public class PlayerController : Unit {
 		}
 		MoveForwrd ();
 		Play (Clip.spell1, null, AnimationEventTriggeredAtt);
+
 	}
 
 	void cyclone ()
@@ -206,6 +220,8 @@ public class PlayerController : Unit {
 				if (ec.isFall == false)
 				{
 					AddEF ("EF001", ec);//TODO:"EF001" need data
+					bool isBig = Random.Range (0, 2) == 1;
+					AddDMG ("NUM001", ec, dmg * (isBig ? 2 : 1), isBig);
 					ec.Hitted (Clip.Hitted);
 					ec.HittedMove (attMoveDis * MGMath.getDirNumber (this), this);
 				}

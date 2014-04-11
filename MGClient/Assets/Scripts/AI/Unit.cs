@@ -189,6 +189,13 @@ public abstract class Unit : MonoBehaviour {
 		go.transform.position = u.transform.position + new Vector3 (0, u.height, -10);//new Vector3 (ec.transform.position.x, height, ec.transform.position.z);
 	}
 
+	public void AddDMG (string path, Unit u, float dmg, bool isBig)
+	{
+		GameObject go = ObjectPool.Instance.LoadObject (MGConstant.NUM + path);
+		go.transform.position = u.transform.position + new Vector3 (UnityEngine.Random.Range (-50, 50), UnityEngine.Random.Range (u.height, u.height * 2) , -1000);
+		go.GetComponent <NumEF>().showMessage ((int)dmg, isBig);
+	}
+
 	#endregion
 
 	public static bool attDistance (Unit att, Unit def, float disVal)
