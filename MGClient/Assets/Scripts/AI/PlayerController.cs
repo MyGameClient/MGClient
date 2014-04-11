@@ -200,7 +200,7 @@ public class PlayerController : Unit {
 		}
 		Play (Clip.spell2, null, AnimationEventTriggeredAtt);
 		InvokeRepeating ("UpdateDmg", 0, 0.25f);
-		Debug.Log (currentClipTime);
+//		Debug.Log (currentClipTime);
 		Invoke ("cancel", currentClipTime);
 	}
 	void cancel ()
