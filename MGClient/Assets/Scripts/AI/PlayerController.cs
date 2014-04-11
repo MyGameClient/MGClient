@@ -158,7 +158,7 @@ public class PlayerController : Unit {
 				if (ec.isFall == false)
 				{
 					ec.Hitted (Clip.Hitted);
-					ec.HittedMove (Mathf.Abs(transform.position.x - tweenPosition.to.x) * MGMath.getDirNumber (this), this);
+					//ec.HittedMove (Mathf.Abs(transform.position.x - tweenPosition.to.x) * MGMath.getDirNumber (this), this);
 				}
 			}
 		}
