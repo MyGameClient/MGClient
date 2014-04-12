@@ -12,7 +12,7 @@ using ExitGames.Client.Photon;
 public class Events
 {
 	public delegate void ProcessResult (Bundle bundle);
-	public delegate void AutoProcessResult (Bundle bundle);
+	public delegate void ProcessResultSync (Bundle bundle);
 }
 
 public class PhotonClient : MonoBehaviour, IPhotonPeerListener {
@@ -22,7 +22,7 @@ public class PhotonClient : MonoBehaviour, IPhotonPeerListener {
 	 *Events
 	 */
 	public static  Events.ProcessResult ProcessResult;
-	public static  Events.AutoProcessResult AutoProcessResult;
+	public static  Events.ProcessResultSync ProcessResultSync;
 
 
 	public static PhotonClient Instance;
@@ -107,7 +107,15 @@ public class PhotonClient : MonoBehaviour, IPhotonPeerListener {
 				bundle.account.id = operationResponse.Parameters[(byte)LoginResponseCode.MemberID].ToString ()/*Convert.ToString(operationResponse.Parameters[1])*/;
 				bundle.account.pw = operationResponse.Parameters[(byte)LoginResponseCode.MemberPW].ToString ();
 				bundle.account.nickName = operationResponse.Parameters[(byte)LoginResponseCode.Nickname].ToString ();/*Convert.ToString(operationResponse.Parameters[3])*/;
+
+				bundle.roomMember.userName = bundle.account.nickName.ToString();
+				bundle.roomMember.userId = operationResponse.Parameters[(byte)LoginResponseCode.MemberUniqueID].ToString ()/*Convert.ToString(operationResponse.Parameters[1])*/;
+				bundle.roomMember.posX = float.Parse (operationResponse.Parameters[(byte)LoginResponseCode.PosX].ToString());
+				bundle.roomMember.posY = float.Parse (operationResponse.Parameters[(byte)LoginResponseCode.PosY].ToString());
+				bundle.roomMember.act = int.Parse (operationResponse.Parameters[(byte)LoginResponseCode.ActionNum].ToString());
+				bundle.roomMember.direct = int.Parse (operationResponse.Parameters[(byte)LoginResponseCode.Direct].ToString());
 				PC.Log ("{ user: " + bundle.account.id + '\n' + "password: " + bundle.account.pw + '\n' + " name : " + bundle.account.nickName + "}");
+				PC.Log (string.Format("userName:{0}, userId:{1}, POSX:{2}, POSY:{3}, ACTOR:{4}:",bundle.roomMember.userName, bundle.roomMember.userId, bundle.roomMember.posX, bundle.roomMember.posY, bundle.roomMember.act));
 
 			}
 			else
@@ -227,9 +235,9 @@ public class PhotonClient : MonoBehaviour, IPhotonPeerListener {
 			Bundle bundle = new Bundle ();
 			string memeberId = eventData.Parameters[(byte) RoomActorQuit.MemberUniqueName].ToString ();
 			PC.Log ("Player : " + memeberId + " has quit!!!");
-			if (AutoProcessResult != null)
+			if (ProcessResultSync != null)
 			{
-				AutoProcessResult (bundle);
+				ProcessResultSync (bundle);
 			}
 		}
 		else if (eventData.Code == (byte)EventCode.RoomBroadcastActorSpeak)

@@ -9,9 +9,9 @@ public enum OperationCode : byte
 	GetAllRoomInfo,
 	JoinRoom,
 	QuitRoom,
-	RoomActorBorning, // 玩家進入聊天室
-	RoomActorActionUpdate, // 玩家更新行為資訊
-	RoomSpeak,        // 玩家發言聊天
+	RoomActorBorning,
+	RoomActorActionUpdate,
+	RoomSpeak,
 }
 
 public enum EventCode: byte
@@ -47,8 +47,14 @@ public enum LoginResponseCode: byte
 	MemberID = 1,
 	MemberPW,
 	Nickname,
-	Sex,
 	MemberUniqueID,
+	Sex,
+
+	PosX,
+	PosY,
+	PosZ,
+	Direct,
+	ActionNum,
 
 	Ret = 80,
 }

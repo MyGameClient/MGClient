@@ -15,6 +15,7 @@ public class Bundle
 	public Room room = new Room ();
 	public List<Room> rooms = new List<Room> ();
 	public Message mesaage = new Message ();
+	public RoomMeneber roomMember = new RoomMeneber ();
 }
 
 public class Account
@@ -57,4 +58,15 @@ public class Item
 public class Role
 {
 	public float speed;
+}
+
+public class RoomMeneber
+{
+	public string userId;
+	public string userName;
+	public float posX;
+	public float posY;
+	public float posZ;
+	public float direct;
+	public float act;//0,stand, 1, walk, 2,attack....
 }
