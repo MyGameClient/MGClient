@@ -254,7 +254,7 @@ public class PlayerController : Unit {
 	{
 		for (int i = 0; i < max; i++)
 		{
-			if (GUI.Button (new Rect (100 * i,Screen.height / 2, 100, 100), "spell" + i.ToString()))
+			if (GUI.Button (new Rect (100 * i,0, 100, 100), "spell" + i.ToString()))
 			{
 				test (i);
 			}

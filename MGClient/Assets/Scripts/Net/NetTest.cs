@@ -12,6 +12,7 @@ public class NetTest : MonoBehaviour {
 	void Start () 
 	{
 		DC.IsOpen = isOpenDenug;
+		DC.LogWarning ("A,S,D,W controll player dir;\n right mouse click attack \n button spell1,spell2,spell3 is use spell");
 		DC.RegisterCommand (OperationCode.Register.ToString (), RegisterTest);
 		DC.RegisterCommand (OperationCode.Login.ToString (), LoginTest);
 		DC.RegisterCommand (OperationCode.GetRoomInfo.ToString (), GetRoomInfo);
