@@ -145,9 +145,18 @@ public class PlayerController : Unit {
 	#region Hitted Method
 	#endregion
 	public override void ExtraInfo ()
-	{}
+	{
+
+	}
 
 	#region spell
+	void hiddenSpells ()
+	{
+		for (int i = 0; i < transform.childCount; i++)
+		{
+			transform.GetChild (i).gameObject.SetActive (false);
+		}
+	}
 	public void assault ()
 	{
 		if (isFall == true && isHitted ==true)
@@ -166,11 +175,17 @@ public class PlayerController : Unit {
 		{
 			if (Unit.isFront (this, ec) && Unit.attDistance (this, ec, distanceTest))
 			{
+				if (ec.isHitted == true)
+				{
+					continue;
+				}
 				if (ec.isFall == false)
 				{
 					bool isBig = Random.Range (0, 2) == 1;
+					AddEF ("EF001", ec);//TODO:"EF001" need data
 					AddDMG ("NUM001", ec, dmg * (isBig ? 2 : 1), isBig);
 					ec.Hitted (Clip.Hitted);
+					ec.stop ();
 					//ec.HittedMove (Mathf.Abs(transform.position.x - tweenPosition.to.x) * MGMath.getDirNumber (this), this);
 				}
 			}
@@ -199,7 +214,8 @@ public class PlayerController : Unit {
 			return;
 		}
 		Play (Clip.spell2, null, AnimationEventTriggeredAtt);
-		InvokeRepeating ("UpdateDmg", 0, 0.25f);
+		InvokeRepeating ("UpdateDmg", 0, 0.7f);
+		AddSP ("spell2");
 //		Debug.Log (currentClipTime);
 		Invoke ("cancel", currentClipTime);
 	}
@@ -212,6 +228,7 @@ public class PlayerController : Unit {
 		if (isFall == true || isHitted == true)
 		{
 			cancel();
+			hiddenSpells ();
 		}
 		foreach(EnemyController ec in EnemyController.enemys)
 		{

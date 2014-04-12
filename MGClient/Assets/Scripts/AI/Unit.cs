@@ -29,6 +29,13 @@ public abstract class Unit : MonoBehaviour {
 
 
 	protected TweenPosition tweenPosition;
+	protected Spell spell;
+	public bool isSpell
+	{
+		get{
+			return spell != null;
+		}
+	}
 
 	[HideInInspector]
 	public tk2dSprite tkSp;
@@ -173,7 +180,7 @@ public abstract class Unit : MonoBehaviour {
 		stop ();
 		tweenPosition = TweenPosition.Begin (gameObject, 0.1f, MGMath.getClampPos (transform.position + new Vector3 (target, 0, 0)));
 	}
-	protected void stop ()
+	public void stop ()
 	{
 		ExtraInfo ();
 		if (tweenPosition != null)
@@ -195,6 +202,14 @@ public abstract class Unit : MonoBehaviour {
 		go.transform.position = u.transform.position + new Vector3 (UnityEngine.Random.Range (-50, 50), UnityEngine.Random.Range (u.height, u.height * 2) , -1000);
 		go.GetComponent <NumEF>().showMessage ((int)dmg, isBig);
 	}
+
+	public void AddSP (string path)
+	{
+		GameObject go = ObjectPool.Instance.LoadObject (MGConstant.SP + path);
+		go.transform.position = transform.position + new Vector3 (0, height, -10);//new Vector3 (ec.transform.position.x, height, ec.transform.position.z);
+		go.transform.parent = transform;
+	}
+
 
 	#endregion
 

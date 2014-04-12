@@ -7,9 +7,11 @@ public class NetTest : MonoBehaviour {
 
 	private const string repose = "<<<<<<<repose<<<<<<<";
 
+	public bool isOpenDenug = true;
+
 	void Start () 
 	{
-		DC.IsOpen = true;
+		DC.IsOpen = isOpenDenug;
 		DC.RegisterCommand (OperationCode.Register.ToString (), RegisterTest);
 		DC.RegisterCommand (OperationCode.Login.ToString (), LoginTest);
 		DC.RegisterCommand (OperationCode.GetRoomInfo.ToString (), GetRoomInfo);
