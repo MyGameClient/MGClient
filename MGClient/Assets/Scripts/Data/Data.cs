@@ -9,6 +9,7 @@ public class Bundle
 	public string error = null;
 	public string notice = "";
 	public OperationCode cmd;
+	public EventCode eventCmd;
 
 	public Account account = new Account ();
 	public User user = new User ();
@@ -20,6 +21,7 @@ public class Bundle
 
 public class Account
 {
+	public string uniqueId;
 	public string id;
 	public string pw;
 	public string nickName;

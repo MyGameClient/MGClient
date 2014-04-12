@@ -20,6 +20,7 @@ public enum EventCode: byte
 	RoomBroadcastActorAction,
 	RoomBroadcastActorQuit,
 	RoomBroadcastActorSpeak,
+	JoinRoomNotify,
 }
 
 public enum ErrorCode: byte

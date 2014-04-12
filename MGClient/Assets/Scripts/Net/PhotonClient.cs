@@ -104,6 +104,8 @@ public class PhotonClient : MonoBehaviour, IPhotonPeerListener {
 			if( success ) // if success
 			{
 				//int getRet = (int) operationResponse.Parameters[(byte)LoginResponseCode.Ret];/*Convert.ToInt32(operationResponse.Parameters[80])*/;
+				//bundle.account = operationResponse.Parameters[(byte)LoginResponseCode.].ToString ()/*Convert.ToString(operationResponse.Parameters[1])*/;
+				bundle.account.uniqueId = operationResponse.Parameters[(byte)LoginResponseCode.MemberUniqueID].ToString ()/*Convert.ToString(operationResponse.Parameters[1])*/;
 				bundle.account.id = operationResponse.Parameters[(byte)LoginResponseCode.MemberID].ToString ()/*Convert.ToString(operationResponse.Parameters[1])*/;
 				bundle.account.pw = operationResponse.Parameters[(byte)LoginResponseCode.MemberPW].ToString ();
 				bundle.account.nickName = operationResponse.Parameters[(byte)LoginResponseCode.Nickname].ToString ();/*Convert.ToString(operationResponse.Parameters[3])*/;
@@ -114,7 +116,7 @@ public class PhotonClient : MonoBehaviour, IPhotonPeerListener {
 				bundle.roomMember.posY = float.Parse (operationResponse.Parameters[(byte)LoginResponseCode.PosY].ToString());
 				bundle.roomMember.act = int.Parse (operationResponse.Parameters[(byte)LoginResponseCode.ActionNum].ToString());
 				bundle.roomMember.direct = int.Parse (operationResponse.Parameters[(byte)LoginResponseCode.Direct].ToString());
-				PC.Log ("{ user: " + bundle.account.id + '\n' + "password: " + bundle.account.pw + '\n' + " name : " + bundle.account.nickName + "}");
+				PC.Log ("{ user: " + bundle.account.id + '\n' + "uniqueId: " + bundle.account.uniqueId + '\n' + " name : " + bundle.account.nickName + "}");
 				PC.Log (string.Format("userName:{0}, userId:{1}, POSX:{2}, POSY:{3}, ACTOR:{4}:",bundle.roomMember.userName, bundle.roomMember.userId, bundle.roomMember.posX, bundle.roomMember.posY, bundle.roomMember.act));
 
 			}
@@ -233,8 +235,10 @@ public class PhotonClient : MonoBehaviour, IPhotonPeerListener {
 		if (eventData.Code == (byte)EventCode.RoomBroadcastActorQuit)
 		{
 			Bundle bundle = new Bundle ();
-			string memeberId = eventData.Parameters[(byte) RoomActorQuit.MemberUniqueName].ToString ();
-			PC.Log ("Player : " + memeberId + " has quit!!!");
+			bundle.eventCmd = EventCode.RoomBroadcastActorQuit;
+			string memeberuniqueid = eventData.Parameters[(byte) RoomActorQuit.MemberUniqueID].ToString ();
+			string memeberName = eventData.Parameters[(byte) RoomActorQuit.MemberUniqueName].ToString ();
+			PC.Log ("Player : " + memeberName + " id " + memeberuniqueid + " has quit!!!");
 			if (ProcessResultSync != null)
 			{
 				ProcessResultSync (bundle);
@@ -243,9 +247,28 @@ public class PhotonClient : MonoBehaviour, IPhotonPeerListener {
 		else if (eventData.Code == (byte)EventCode.RoomBroadcastActorSpeak)
 		{
 			Bundle bundle = new Bundle ();
+			bundle.eventCmd = EventCode.RoomBroadcastActorSpeak;
 			bundle.mesaage.from = eventData.Parameters[(byte) RoomActorSpeak.MemberUniqueName].ToString ();
 			bundle.mesaage.content = eventData.Parameters[(byte) RoomActorSpeak.TalkString].ToString ();
 			PC.Log (bundle.mesaage.from + " Talk : " + bundle.mesaage.content);
+			if (ProcessResultSync != null)
+			{
+				ProcessResultSync (bundle);
+			}
+		}
+		else if (eventData.Code == (byte)EventCode.JoinRoomNotify)
+		{
+			Bundle bundle = new Bundle ();
+			bundle.eventCmd = EventCode.JoinRoomNotify;
+			bundle.roomMember.posX = float.Parse (eventData.Parameters[(byte) RoomActorActionInfo.PosX].ToString ());
+			bundle.roomMember.posY = float.Parse (eventData.Parameters[(byte) RoomActorActionInfo.PosY].ToString ());
+			bundle.roomMember.userId = eventData.Parameters[(byte) RoomActorActionInfo.MemberUniqueID].ToString ();
+			bundle.roomMember.userName = eventData.Parameters[(byte) RoomActorActionInfo.NickName].ToString ();
+			PC.Log (bundle.roomMember.userName + " id : " + bundle.roomMember.userId + " Join room");
+			if (ProcessResultSync != null)
+			{
+				ProcessResultSync (bundle);
+			}
 		}
 	}
 
