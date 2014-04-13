@@ -125,6 +125,10 @@ public class PlayerController : Unit {
 
 	private void HitTarget ()
 	{
+		if (currentClip == Clip.spell1)
+		{
+			NotificationCenter.PostNotification (this, "PlayShake");
+		}
 		foreach(EnemyController ec in EnemyController.enemys)
 		{
 			if (Unit.isFront (this, ec) && Unit.attDistance (this, ec, distanceTest))
@@ -202,6 +206,7 @@ public class PlayerController : Unit {
 		{
 			return;
 		}
+
 		MoveForwrd ();
 		Play (Clip.spell1, null, AnimationEventTriggeredAtt);
 

@@ -11,6 +11,12 @@ public class CameraController : MonoBehaviour {
 	public float targetMaxHight = 400;
 	
 	private tk2dCamera camera2d;
+	public tk2dCamera tkCamera
+	{
+		get{
+			return camera2d;
+		}
+	}
 	private Vector3 screenCenter;
 	private Vector3 screenPoint;
 	private Vector3 move = Vector3.zero;
