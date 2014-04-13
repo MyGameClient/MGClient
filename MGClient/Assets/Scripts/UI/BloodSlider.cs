@@ -13,7 +13,11 @@ public class BloodSlider : MonoBehaviour {
 	private float sliderValue
 	{
 		set{
-			middleBlood.transform.localScale = slider.foreground.transform.localScale;
+			if (value < slider.sliderValue)
+			{
+				middleBlood.transform.localScale = slider.foreground.transform.localScale;
+			}
+
 			slider.sliderValue = value;
 		}
 	}
@@ -41,6 +45,7 @@ public class BloodSlider : MonoBehaviour {
 
 	public void Refresh (float val)
 	{
+		//sliderValue = 1.0f;
 		if (tweener != null)
 		{
 			tweener.enabled = false;

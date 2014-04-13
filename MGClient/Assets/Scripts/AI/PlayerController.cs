@@ -68,7 +68,7 @@ public class PlayerController : Unit {
 				xDir = x > 0 ? Dir.Right : Dir.Left;
 			}
 		}
-		if (isHitted == false || currentClip != Clip.spell2)
+		if (isHitted == false && currentClip != Clip.spell2)
 		{
 			Play((x != 0 || y != 0) ? Clip.Walk : Clip.Stand);
 		}
@@ -128,6 +128,7 @@ public class PlayerController : Unit {
 		if (currentClip == Clip.spell1)
 		{
 			NotificationCenter.PostNotification (this, "PlayShake");
+			AddSP ("spell1", 150);
 		}
 	
 
@@ -189,6 +190,11 @@ public class PlayerController : Unit {
 		{
 			return;
 		}
+		if (isSpell == true)
+		{
+			return;
+		}
+		AddSP ("spell0", -100);
 		float dir = MGMath.getDirNumber (this);
 		MoveToTarget (transform.position + new Vector3 (dir * spell.distance, 0, 0), spell.spd);
 		Play (Clip.spell0);
@@ -230,7 +236,10 @@ public class PlayerController : Unit {
 		{
 			return;
 		}
-
+		if (isSpell == true)
+		{
+			return;
+		}
 		MoveForwrd ();
 		Play (Clip.spell1, null, AnimationEventTriggeredAtt);
 
@@ -239,6 +248,10 @@ public class PlayerController : Unit {
 	void cyclone ()
 	{
 		if (isFall == true && isHitted ==true)
+		{
+			return;
+		}
+		if (isSpell == true)
 		{
 			return;
 		}

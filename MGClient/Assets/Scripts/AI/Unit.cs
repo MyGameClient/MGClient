@@ -33,7 +33,7 @@ public abstract class Unit : MonoBehaviour {
 	public bool isSpell
 	{
 		get{
-			return spell != null;
+			return _currentClip.ToString().Contains("spell");
 		}
 	}
 
@@ -208,10 +208,10 @@ public abstract class Unit : MonoBehaviour {
 		go.GetComponent <NumEF>().showMessage ((int)dmg, isBig);
 	}
 
-	public void AddSP (string path)
+	public void AddSP (string path, float offset = 0)
 	{
 		GameObject go = ObjectPool.Instance.LoadObject (MGConstant.SP + path);
-		go.transform.position = transform.position + new Vector3 (0, height, -10);//new Vector3 (ec.transform.position.x, height, ec.transform.position.z);
+		go.transform.position = transform.position + new Vector3 (MGMath.getDirNumber(this) * offset, height, -10);//new Vector3 (ec.transform.position.x, height, ec.transform.position.z);
 		go.transform.parent = transform;
 	}
 
