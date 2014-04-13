@@ -128,7 +128,7 @@ public class PlayerController : Unit {
 		if (currentClip == Clip.spell1)
 		{
 			NotificationCenter.PostNotification (this, "PlayShake");
-			AddSP ("spell1", 150);
+			AddSP ("SP1", 150);
 		}
 	
 
@@ -142,7 +142,7 @@ public class PlayerController : Unit {
 					AddEF ("EF001", ec);//TODO:"EF001" need data
 					bool isBig = Random.Range (0, 2) == 1;
 					float dmg = _dmg * (isBig ? 2 : 1);
-					AddDMG ("NUM001", ec, dmg, isBig);
+					AddDMG ("NU001", ec, dmg, isBig);
 					ec.Hitted (currentClip == Clip.AttackLast || currentClip == Clip.spell1 ? Clip.Fall : Clip.Hitted, dmg);
 					ec.HittedMove (attMoveDis * MGMath.getDirNumber (this), this);
 				}
@@ -157,7 +157,7 @@ public class PlayerController : Unit {
 					AddEF ("EF001", ec);//TODO:"EF001" need data
 					bool isBig = Random.Range (0, 2) == 1;
 					float dmg = _dmg * (isBig ? 2 : 1);
-					AddDMG ("NUM001", ec, dmg, isBig);
+					AddDMG ("NU001", ec, dmg, isBig);
 					ec.Hitted (currentClip == Clip.AttackLast || currentClip == Clip.spell1 ? Clip.Fall : Clip.Hitted, dmg);
 					ec.HittedMove (attMoveDis * MGMath.getDirNumber (this), this);
 				}
@@ -194,7 +194,7 @@ public class PlayerController : Unit {
 		{
 			return;
 		}
-		AddSP ("spell0", -100);
+		AddSP ("SP0", -100);
 		float dir = MGMath.getDirNumber (this);
 		MoveToTarget (transform.position + new Vector3 (dir * spell.distance, 0, 0), spell.spd);
 		Play (Clip.spell0);
@@ -217,7 +217,7 @@ public class PlayerController : Unit {
 					bool isBig = Random.Range (0, 2) == 1;
 					float dmg = _dmg * (isBig ? 2 : 1);
 					AddEF ("EF001", ec);//TODO:"EF001" need data
-					AddDMG ("NUM001", ec, dmg, isBig);
+					AddDMG ("NU001", ec, dmg, isBig);
 					ec.Hitted (Clip.Hitted, dmg);
 					ec.stop ();
 					//ec.HittedMove (Mathf.Abs(transform.position.x - tweenPosition.to.x) * MGMath.getDirNumber (this), this);
@@ -257,7 +257,7 @@ public class PlayerController : Unit {
 		}
 		Play (Clip.spell2, null, AnimationEventTriggeredAtt);
 		InvokeRepeating ("UpdateDmg", 0, 0.7f);
-		AddSP ("spell2");
+		AddSP ("SP2");
 //		Debug.Log (currentClipTime);
 		Invoke ("cancel", currentClipTime);
 	}
@@ -282,7 +282,7 @@ public class PlayerController : Unit {
 					AddEF ("EF001", ec);//TODO:"EF001" need data
 					bool isBig = Random.Range (0, 2) == 1;
 					float dmg = _dmg * (isBig ? 2 : 1);
-					AddDMG ("NUM001", ec, dmg, isBig);
+					AddDMG ("NU001", ec, dmg, isBig);
 					ec.Hitted (Clip.Hitted, dmg);
 					ec.HittedMove (attMoveDis * MGMath.getDirNumber (this), this);
 				}

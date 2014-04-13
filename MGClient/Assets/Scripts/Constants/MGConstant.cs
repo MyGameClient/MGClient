@@ -5,7 +5,7 @@ public class MGConstant {
 
 	public const string EF = "EF/";
 	public const string PY = "PY/";
-	public const string NUM = "NUM/";
+	public const string NU = "NU/";
 	public const string SP = "SP/";
 	public const string MU = "MU/";
 }

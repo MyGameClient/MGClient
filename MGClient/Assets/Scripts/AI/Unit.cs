@@ -203,7 +203,7 @@ public abstract class Unit : MonoBehaviour {
 
 	public void AddDMG (string path, Unit u, float dmg, bool isBig)
 	{
-		GameObject go = ObjectPool.Instance.LoadObject (MGConstant.NUM + path);
+		GameObject go = ObjectPool.Instance.LoadObject (MGConstant.NU + path);
 		go.transform.position = u.transform.position + new Vector3 (UnityEngine.Random.Range (-50, 50), UnityEngine.Random.Range (u.height, u.height * 2) , -1000);
 		go.GetComponent <NumEF>().showMessage ((int)dmg, isBig);
 	}
