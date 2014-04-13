@@ -6,6 +6,7 @@ public class MultiPlayerController : Unit {
 	public UILabel label;
 
 	public override void ExtraInfo(){}
+	public override void ApplyDmg (float dmg, bool isSlider){}
 
 	void Awake()
 	{

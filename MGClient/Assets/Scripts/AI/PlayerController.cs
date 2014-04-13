@@ -21,7 +21,7 @@ public class PlayerController : Unit {
 	public float attDmg = 200;
 
 
-	private float dmg
+	private float _dmg
 	{
 		get{
 			return Random.Range (attDmg - 10, attDmg + 10);
@@ -129,7 +129,25 @@ public class PlayerController : Unit {
 		{
 			NotificationCenter.PostNotification (this, "PlayShake");
 		}
-		foreach(EnemyController ec in EnemyController.enemys)
+	
+
+		for(int i = 0; i < EnemyController.enemys.Count; i++)
+		{
+			EnemyController ec = EnemyController.enemys[i];
+			if (Unit.isFront (this, ec) && Unit.attDistance (this, ec, distanceTest))
+			{
+				if (ec.isFall == false)
+				{
+					AddEF ("EF001", ec);//TODO:"EF001" need data
+					bool isBig = Random.Range (0, 2) == 1;
+					float dmg = _dmg * (isBig ? 2 : 1);
+					AddDMG ("NUM001", ec, dmg, isBig);
+					ec.Hitted (currentClip == Clip.AttackLast || currentClip == Clip.spell1 ? Clip.Fall : Clip.Hitted, dmg);
+					ec.HittedMove (attMoveDis * MGMath.getDirNumber (this), this);
+				}
+			}
+		}
+		/*foreach(EnemyController ec in EnemyController.enemys)
 		{
 			if (Unit.isFront (this, ec) && Unit.attDistance (this, ec, distanceTest))
 			{
@@ -137,12 +155,13 @@ public class PlayerController : Unit {
 				{
 					AddEF ("EF001", ec);//TODO:"EF001" need data
 					bool isBig = Random.Range (0, 2) == 1;
-					AddDMG ("NUM001", ec, dmg * (isBig ? 2 : 1), isBig);
-					ec.Hitted (currentClip == Clip.AttackLast || currentClip == Clip.spell1 ? Clip.Fall : Clip.Hitted);
+					float dmg = _dmg * (isBig ? 2 : 1);
+					AddDMG ("NUM001", ec, dmg, isBig);
+					ec.Hitted (currentClip == Clip.AttackLast || currentClip == Clip.spell1 ? Clip.Fall : Clip.Hitted, dmg);
 					ec.HittedMove (attMoveDis * MGMath.getDirNumber (this), this);
 				}
 			}
-		}
+		}*/
 	}
 	#endregion
 
@@ -152,6 +171,9 @@ public class PlayerController : Unit {
 	{
 
 	}
+
+	public override void ApplyDmg (float dmg, bool isSlider)
+	{}
 
 	#region spell
 	void hiddenSpells ()
@@ -175,8 +197,9 @@ public class PlayerController : Unit {
 	}
 	void onUpdateAssault()
 	{
-		foreach(EnemyController ec in EnemyController.enemys)
+		for(int i = 0; i < EnemyController.enemys.Count; i++)
 		{
+			EnemyController ec = EnemyController.enemys[i];
 			if (Unit.isFront (this, ec) && Unit.attDistance (this, ec, distanceTest))
 			{
 				if (ec.isHitted == true)
@@ -186,9 +209,10 @@ public class PlayerController : Unit {
 				if (ec.isFall == false)
 				{
 					bool isBig = Random.Range (0, 2) == 1;
+					float dmg = _dmg * (isBig ? 2 : 1);
 					AddEF ("EF001", ec);//TODO:"EF001" need data
-					AddDMG ("NUM001", ec, dmg * (isBig ? 2 : 1), isBig);
-					ec.Hitted (Clip.Hitted);
+					AddDMG ("NUM001", ec, dmg, isBig);
+					ec.Hitted (Clip.Hitted, dmg);
 					ec.stop ();
 					//ec.HittedMove (Mathf.Abs(transform.position.x - tweenPosition.to.x) * MGMath.getDirNumber (this), this);
 				}
@@ -235,16 +259,18 @@ public class PlayerController : Unit {
 			cancel();
 			hiddenSpells ();
 		}
-		foreach(EnemyController ec in EnemyController.enemys)
+		for(int i = 0; i < EnemyController.enemys.Count; i++)
 		{
+			EnemyController ec = EnemyController.enemys[i];
 			if (Unit.attDistance (this, ec, distanceTest))
 			{
 				if (ec.isFall == false)
 				{
 					AddEF ("EF001", ec);//TODO:"EF001" need data
 					bool isBig = Random.Range (0, 2) == 1;
-					AddDMG ("NUM001", ec, dmg * (isBig ? 2 : 1), isBig);
-					ec.Hitted (Clip.Hitted);
+					float dmg = _dmg * (isBig ? 2 : 1);
+					AddDMG ("NUM001", ec, dmg, isBig);
+					ec.Hitted (Clip.Hitted, dmg);
 					ec.HittedMove (attMoveDis * MGMath.getDirNumber (this), this);
 				}
 			}

@@ -155,11 +155,12 @@ public abstract class Unit : MonoBehaviour {
 	#region Hit or hitted method
 
 	public abstract void ExtraInfo ();
-
-	public void Hitted(Clip c)
+	public abstract void ApplyDmg (float dmg, bool isSlider);
+	public void Hitted(Clip c, float dmg = 0, bool isSlider = false)
 	{
 		Play (c);
 		colorRed ();
+		ApplyDmg (dmg, isSlider);
 	}
 	public void colorRed ()
 	{

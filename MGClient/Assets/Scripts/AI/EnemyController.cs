@@ -17,6 +17,8 @@ public class EnemyController : Unit {
 	public float randge = 100.0f;//TODO: MS DATA
 	public float distanceTest = 400;//TODO: MS DATA
 	public float attMoveDis = 30;//TODO: MS DATA
+	public float hp = 5000;//TODO: MS DATA
+	public float hpMax = 5000;//TODO: MS DATA
 
 
 	public static List<EnemyController> enemys = new List<EnemyController> ();
@@ -158,12 +160,32 @@ public class EnemyController : Unit {
 			target.Hitted (Clip.Hitted);
 			target.HittedMove (attMoveDis * MGMath.getDirNumber (this), this);
 		}
-		//_state = State.Max;
 	}
 	#endregion
 
 
 	#region Hitted Method
+	public override void ApplyDmg (float dmg, bool isSlider)
+	{
+		hp -= dmg;
+		//if (isSlider == true)
+		{
+			BloodSlider.instance.Refresh (hp / hpMax);
+		}
+		if (hp <= 0)
+		{
+			Play (Clip.Die, DieOnComplete, null);
+			OnDisable ();
+		}
+	}
+	void DieOnComplete (tk2dSpriteAnimator a, tk2dSpriteAnimationClip b)
+	{
+		TweenTk2dColor.Begin (gameObject, 0.5f, new Color (tkSp.color.r, tkSp.color.g, tkSp.color.b, 0)).onFinished = DestoryDone;
+	}
+	void DestoryDone (UITweener u)
+	{
+		gameObject.SetActive (false);
+	}
 	#endregion
 	public override void ExtraInfo ()
 	{
