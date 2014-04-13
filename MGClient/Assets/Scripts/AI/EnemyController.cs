@@ -170,7 +170,10 @@ public class EnemyController : Unit {
 		hp -= dmg;
 		//if (isSlider == true)
 		{
-			BloodSlider.instance.Refresh (hp / hpMax);
+			if (BloodSlider.instance)
+			{
+				BloodSlider.instance.Refresh (hp / hpMax);
+			}
 		}
 		if (hp <= 0)
 		{

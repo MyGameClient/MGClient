@@ -170,7 +170,8 @@ public class PlayerController : Unit {
 	#endregion
 	public override void ExtraInfo ()
 	{
-
+		hiddenSpells ();
+		cancel ();
 	}
 
 	public override void ApplyDmg (float dmg, bool isSlider)
@@ -256,7 +257,7 @@ public class PlayerController : Unit {
 			return;
 		}
 		Play (Clip.spell2, null, AnimationEventTriggeredAtt);
-		InvokeRepeating ("UpdateDmg", 0, 0.7f);
+		InvokeRepeating ("UpdateDmg", 0, 1f);
 		AddSP ("SP2");
 //		Debug.Log (currentClipTime);
 		Invoke ("cancel", currentClipTime);
@@ -269,8 +270,9 @@ public class PlayerController : Unit {
 	{
 		if (isFall == true || isHitted == true)
 		{
-			cancel();
-			hiddenSpells ();
+//			cancel();
+//			Debug.Log ("break in...");
+//			hiddenSpells ();
 		}
 		for(int i = 0; i < EnemyController.enemys.Count; i++)
 		{
@@ -284,7 +286,7 @@ public class PlayerController : Unit {
 					float dmg = _dmg * (isBig ? 2 : 1);
 					AddDMG ("NU001", ec, dmg, isBig);
 					ec.Hitted (Clip.Hitted, dmg);
-					ec.HittedMove (attMoveDis * MGMath.getDirNumber (this), this);
+					ec.HittedMove (0/*attMoveDis * MGMath.getDirNumber (this)*/, this);
 				}
 			}
 		}

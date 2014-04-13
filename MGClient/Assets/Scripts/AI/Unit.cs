@@ -160,6 +160,7 @@ public abstract class Unit : MonoBehaviour {
 	{
 		Play (c);
 		colorRed ();
+		ExtraInfo ();
 		ApplyDmg (dmg, isSlider);
 	}
 	public void colorRed ()
