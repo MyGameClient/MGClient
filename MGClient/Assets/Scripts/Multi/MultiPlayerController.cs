@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
 public class MultiPlayerController : Unit {
@@ -12,7 +12,7 @@ public class MultiPlayerController : Unit {
 		Init ();
 	}
 
-	public void Refresh (RoomMeneber rm)
+	public void Refresh (RoomMember rm)
 	{
 		transform.position = new Vector3 (rm.posX, rm.posY, rm.posY);
 		this.name = rm.userId;

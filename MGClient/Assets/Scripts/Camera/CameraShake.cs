@@ -24,7 +24,7 @@ public class CameraShake : MonoBehaviour {
 	{
 		float size = CameraController.instance.tkCamera.ZoomFactor;
 		CameraController.instance.tkCamera.ZoomFactor = (size == 1) ? maxScale : 1;
-		Debug.Log (camera.orthographicSize);
+//		Debug.Log (camera.orthographicSize);
 		if (Time.time - lastTime >= duration)
 		{
 			StopShake();

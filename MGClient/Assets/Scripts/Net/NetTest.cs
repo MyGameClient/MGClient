@@ -24,18 +24,16 @@ public class NetTest : MonoBehaviour {
 
 	private string RegisterTest (params string[] p)
 	{
-		if (p.Length >= 5)
+		if (p.Length >= 3)
 		{
 			Account a = new Account ();
 			a.id = p[1];
 			a.pw = p[2];
-			a.nickName = p[3];
-			a.sex = int.Parse (p[4]);
 			NetSend.SendRegister (a);
 			//NotificationCenter.PostNotification (this, "SendRegister", a);
 			return repose;
 		}
-		return p[0] + " userId,userPw,userName,userSex usage";
+		return p[0] + " userId,userPw";
 	}
 
 	private string LoginTest (params string[] p)

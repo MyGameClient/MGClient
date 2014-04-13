@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -45,14 +45,14 @@ public class MultiPlayerManager : MonoBehaviour {
 		}
 	}
 
-	void AddMU (RoomMeneber rm)
+	void AddMU (RoomMember rm)
 	{
 		GameObject go = ObjectPool.Instance.LoadObject (MGConstant.MU + "MU001");
 		//go.transform.position = new Vector3 (rm.posX, rm.posY, rm.posY);
 		go.GetComponent<MultiPlayerController>().Refresh (rm);
 	}
 
-	void AddPY (RoomMeneber rm)
+	void AddPY (RoomMember rm)
 	{
 		GameObject go = ObjectPool.Instance.LoadObject (MGConstant.PY + "PY001");
 		go.transform.position = new Vector3 (rm.posX, rm.posY, rm.posY);

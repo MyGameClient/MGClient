@@ -3,30 +3,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-public class Bundle
-{
-	public bool isRegister;
-	public string error = null;
-	public string notice = "";
-	public OperationCode cmd;
-	public EventCode eventCmd;
 
-	public Account account = new Account ();
-	public User user = new User ();
-	public Room room = new Room ();
-	public List<Room> rooms = new List<Room> ();
-	public Message mesaage = new Message ();
-	public RoomMeneber roomMember = new RoomMeneber ();
-}
 
-public class Account
-{
-	public string uniqueId;
-	public string id;
-	public string pw;
-	public string nickName;
-	public int sex;
-}
+
 
 public class User
 {
@@ -40,6 +19,7 @@ public class Room
 	public string RoomName;
 	public int Limit;
 	public int ActorCount;
+	//public List<Account>
 }
 
 public class Message
@@ -62,7 +42,7 @@ public class Role
 	public float speed;
 }
 
-public class RoomMeneber
+public class RoomMember
 {
 	public string userId;
 	public string userName;
