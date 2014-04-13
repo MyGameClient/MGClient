@@ -12,5 +12,5 @@ public class Account
 	[DefaultValue (null)]
 	public string pw;
 	[DefaultValue (null)]
-	public long creatTime;
+	public DateTime creatTime;
 }

@@ -30,17 +30,17 @@ public class Message
 	public DateTime time;
 }
 
-public class Item
+/*public class Item
 {
 	public int id;
 	public string name;
 	public string type;
-}
+}*/
 
-public class Role
-{
-	public float speed;
-}
+//public class Role
+//{
+//	public float speed;
+//}
 
 public class RoomMember
 {
