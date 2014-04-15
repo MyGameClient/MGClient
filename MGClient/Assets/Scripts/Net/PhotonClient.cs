@@ -93,10 +93,22 @@ public class PhotonClient : MonoBehaviour, IPhotonPeerListener {
 			break;
 		}
 	}
-
-	public void SendServer (OperationCode operationCode, Dictionary<byte, object> parameter)
+	public void SendServer (OperationCode operationCode)
 	{
-		this.peer.OpCustom((byte)operationCode, parameter, true); // operationCode is 5
+		SendServer<object> (operationCode, null);
+	}
+	public void SendServer<T> (OperationCode operationCode, T t)
+	{
+		Dictionary<byte, object> parameter = null;
+		if (t != null)
+		{
+			parameter = new Dictionary<byte, object>();
+			string json = JsonConvert.SerializeObject(t);
+			parameter.Add ((byte)operationCode, json);
+			Debug.Log (json);
+			DC.Log (json);
+		}
+		this.peer.OpCustom((byte)operationCode, parameter, true);
 	}
 
 	public void DebugReturn (DebugLevel level, string message)
@@ -106,16 +118,18 @@ public class PhotonClient : MonoBehaviour, IPhotonPeerListener {
 	}
 	public void OnOperationResponse (OperationResponse operationResponse)
 	{
-		Bundle bundle = new Bundle ();
-
-		string json = operationResponse[operationResponse.OperationCode].ToString();
-		bundle = JsonConvert.DeserializeObject<Bundle>(json);
-		bundle.cmd = (OperationCode) operationResponse.OperationCode;//cmd
-		Debug.Log (json);
-		DC.Log(json);
-		if (ProcessResult != null)
+		if (operationResponse.ReturnCode > 0)
 		{
-			ProcessResult (bundle);
+			Bundle bundle = new Bundle ();
+			string json = operationResponse[operationResponse.OperationCode].ToString();
+			bundle = JsonConvert.DeserializeObject<Bundle>(json);
+			bundle.cmd = (OperationCode) operationResponse.OperationCode;//cmd
+			Debug.Log (json);
+			DC.Log(json);
+			if (ProcessResult != null)
+			{
+				ProcessResult (bundle);
+			}
 		}
 	}
 

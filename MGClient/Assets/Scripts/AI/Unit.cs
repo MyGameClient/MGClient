@@ -42,6 +42,8 @@ public abstract class Unit : MonoBehaviour {
 	[HideInInspector]
 	public tk2dSpriteAnimator tkAnt;
 
+	protected bool isPlayer = false;
+
 	protected void Init ()
 	{
 		tkSp = GetComponent <tk2dSprite>();
@@ -158,9 +160,17 @@ public abstract class Unit : MonoBehaviour {
 	public abstract void ApplyDmg (float dmg, bool isSlider);
 	public void Hitted(Clip c, float dmg = 0, bool isSlider = false)
 	{
-		Play (c);
-		colorRed ();
+		if (isPlayer == true && _currentClip == Clip.spell2)
+		{
+			return;
+		}
+		else
+		{
+			Play (c);
+		}
 		ExtraInfo ();
+
+		colorRed ();
 		ApplyDmg (dmg, isSlider);
 	}
 	public void colorRed ()

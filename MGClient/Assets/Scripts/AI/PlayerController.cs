@@ -36,6 +36,7 @@ public class PlayerController : Unit {
 	
 	void Start () 
 	{
+		isPlayer = true;
 		CameraController.instance.SetCameraTargetInfo (transform);
 		Init ();
 	}
@@ -170,8 +171,8 @@ public class PlayerController : Unit {
 	#endregion
 	public override void ExtraInfo ()
 	{
-		hiddenSpells ();
-		cancel ();
+//		cancel ();
+//		hiddenSpells ();
 	}
 
 	public override void ApplyDmg (float dmg, bool isSlider)
@@ -219,9 +220,10 @@ public class PlayerController : Unit {
 					float dmg = _dmg * (isBig ? 2 : 1);
 					AddEF ("EF001", ec);//TODO:"EF001" need data
 					AddDMG ("NU001", ec, dmg, isBig);
-					ec.Hitted (Clip.Hitted, dmg);
+					ec.Hitted (Clip.Fall, dmg);
 					ec.stop ();
-					//ec.HittedMove (Mathf.Abs(transform.position.x - tweenPosition.to.x) * MGMath.getDirNumber (this), this);
+
+					ec.HittedMove (Mathf.Abs(transform.position.x - tweenPosition.to.x) * MGMath.getDirNumber (this), this);
 				}
 			}
 		}
@@ -256,23 +258,22 @@ public class PlayerController : Unit {
 		{
 			return;
 		}
+		cancel ();
 		Play (Clip.spell2, null, AnimationEventTriggeredAtt);
-		InvokeRepeating ("UpdateDmg", 0, 1f);
+		InvokeRepeating ("UpdateDmg", 0.1f, 0.8f);
 		AddSP ("SP2");
-//		Debug.Log (currentClipTime);
 		Invoke ("cancel", currentClipTime);
 	}
 	void cancel ()
 	{
+		CancelInvoke ("cancel");
 		CancelInvoke ("UpdateDmg");
 	}
 	void UpdateDmg ()
 	{
-		if (isFall == true || isHitted == true)
+		if (isFall == true || isHitted == true || isSpell == false)
 		{
-//			cancel();
-//			Debug.Log ("break in...");
-//			hiddenSpells ();
+			return;
 		}
 		for(int i = 0; i < EnemyController.enemys.Count; i++)
 		{

@@ -177,6 +177,7 @@ public class EnemyController : Unit {
 		}
 		if (hp <= 0)
 		{
+
 			Play (Clip.Die, DieOnComplete, null);
 			OnDisable ();
 		}
