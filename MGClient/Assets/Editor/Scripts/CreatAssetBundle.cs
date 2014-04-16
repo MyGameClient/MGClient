@@ -32,18 +32,16 @@ public class CreatAssetBundle : Editor {
 	{  
 		Object[] SelectedAsset = Selection.GetFiltered (typeof(Object), SelectionMode.DeepAssets);  
 		foreach (Object obj in SelectedAsset)   
-		{  
-//			string file = obj.name.Substring (0,2) + "/";
-//			string targetPath = PathURL + file + obj.name + ".assetbundle";  
+		{   
 			string targetPath = Application.dataPath + "/StreamingAssets/" + obj.name + ".assetbundle";  
 
-			//Debug.Log (targetPath + "____" + targetPath1);
-			if (BuildPipeline.BuildAssetBundle (obj, null, targetPath, BuildAssetBundleOptions.CollectDependencies)) {  
-				Debug.Log(obj.name +"资源打包成功");  
+			if (BuildPipeline.BuildAssetBundle (obj, null, targetPath, BuildAssetBundleOptions.CollectDependencies)) 
+			{  
+				Debug.Log(obj.name +" Creat Success");  
 			}   
 			else   
 			{  
-				Debug.Log(obj.name +"资源打包失败");  
+				Debug.Log(obj.name +" Creat fail");  
 			}  
 		}  
 		AssetDatabase.Refresh ();     

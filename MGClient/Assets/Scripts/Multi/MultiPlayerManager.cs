@@ -47,14 +47,14 @@ public class MultiPlayerManager : MonoBehaviour {
 
 	void AddMU (RoomMember rm)
 	{
-		GameObject go = ObjectPool.Instance.LoadObject (MGConstant.MU + "MU001");
+		GameObject go = ObjectPool.Instance.LoadObject ("MU001");
 		//go.transform.position = new Vector3 (rm.posX, rm.posY, rm.posY);
 		go.GetComponent<MultiPlayerController>().Refresh (rm);
 	}
 
 	void AddPY (RoomMember rm)
 	{
-		GameObject go = ObjectPool.Instance.LoadObject (MGConstant.PY + "PY001");
+		GameObject go = ObjectPool.Instance.LoadObject ("PY001");
 		go.transform.position = new Vector3 (rm.posX, rm.posY, rm.posY);
 	}
 

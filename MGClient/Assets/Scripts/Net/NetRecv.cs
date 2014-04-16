@@ -6,7 +6,6 @@ public class NetRecv : MonoBehaviour {
 	void OnEnable ()
 	{
 		PhotonClient.ProcessResult += ProcessResult;
-		//PhotonClient.ProcessResultSync += ProcessResultSync;
 	}
 
 	void OnDisable ()

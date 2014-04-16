@@ -208,20 +208,20 @@ public abstract class Unit : MonoBehaviour {
 
 	public void AddEF (string path, Unit u)
 	{
-		GameObject go = ObjectPool.Instance.LoadObject (MGConstant.EF + path);
+		GameObject go = ObjectPool.Instance.LoadObject (path);
 		go.transform.position = u.transform.position + new Vector3 (0, u.height, -10);//new Vector3 (ec.transform.position.x, height, ec.transform.position.z);
 	}
 
 	public void AddDMG (string path, Unit u, float dmg, bool isBig)
 	{
-		GameObject go = ObjectPool.Instance.LoadObject (MGConstant.NU + path);
+		GameObject go = ObjectPool.Instance.LoadObject (path);
 		go.transform.position = u.transform.position + new Vector3 (UnityEngine.Random.Range (-50, 50), UnityEngine.Random.Range (u.height, u.height * 2) , -1000);
 		go.GetComponent <NumEF>().showMessage ((int)dmg, isBig);
 	}
 
 	public void AddSP (string path, float offset = 0)
 	{
-		GameObject go = ObjectPool.Instance.LoadObject (MGConstant.SP + path);
+		GameObject go = ObjectPool.Instance.LoadObject (path);
 		go.transform.position = transform.position + new Vector3 (MGMath.getDirNumber(this) * offset, height, -10);//new Vector3 (ec.transform.position.x, height, ec.transform.position.z);
 		go.transform.parent = transform;
 	}

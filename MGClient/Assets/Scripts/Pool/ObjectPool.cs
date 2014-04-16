@@ -39,7 +39,7 @@ public class ObjectPool {
 				return g;
 			}
 		}
-		go = Resources.Load (path, typeof(GameObject)) as GameObject;
+		go = AssetLoader.instance.getIdByPrefabs (path);//Resources.Load (path, typeof(GameObject)) as GameObject;
 		go = GameObject.Instantiate (go) as GameObject;//NGUITools.AddChild(go);
 		gos.Add (go);
 		objects[path] = gos;
