@@ -3,8 +3,6 @@ using System.Collections;
 using System;
 using System.Collections.Generic;
 using DC = DebugConsole;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 using System.Security;
 using ExitGames.Client.Photon;
 
