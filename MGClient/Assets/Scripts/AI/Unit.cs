@@ -49,6 +49,9 @@ public abstract class Unit : MonoBehaviour {
 		tkSp = GetComponent <tk2dSprite>();
 		tkAnt = GetComponent<tk2dSpriteAnimator>();
 		tkAnt.AnimationCompleted = CompletedPalyStand;
+		Vector3 pos =  transform.position;
+		pos.z = pos.y;
+		transform.position = pos;
 	}
 
 	//dir

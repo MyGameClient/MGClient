@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System;
 using System.IO;
 using System.Text;
 using System.Collections;
@@ -7,16 +8,16 @@ using System.Collections.Generic;
 public class AssetLoader : MonoBehaviour {
 
 
-	public static readonly string PathURL =  
-		#if UNITY_ANDROID   //安卓  
+	public static readonly string PathURL = 
+#if UNITY_STANDALONE_WIN || UNITY_EDITOR
 		Application.dataPath + "/MGRes/AD/";
-	#elif UNITY_IPHONE  //iPhone  
+#elif UNITY_ANDROID   //安卓  
+		"mnt/sdcard/MGRes/";
+#elif UNITY_IPHONE  //iPhone  
 	Application.dataPath + "/MGRes/IOS/";
-	#elif UNITY_STANDALONE_WIN || UNITY_EDITOR
-	Application.dataPath + "/MGRes/PC";
-	#else  
+#else  
 	string.Empty;  
-	#endif  
+#endif 
 
 
 
@@ -34,20 +35,15 @@ public class AssetLoader : MonoBehaviour {
 	List<string> GetPathName ()
 	{
 		List<string> paths = new List<string> ();
-		//root dict
-		DirectoryInfo directoryInfo = new DirectoryInfo(PathURL);
-		FileInfo[] fileInfos = directoryInfo.GetFiles();
-		
-		foreach (FileInfo fileInfo in fileInfos)
+
+		foreach (string file in Directory.GetDirectories (PathURL))
 		{
-			string path = fileInfo.ToString().Replace (".meta", "");
-			DirectoryInfo childDirectoryInfo = new DirectoryInfo(path);
-			FileInfo[] infos = childDirectoryInfo.GetFiles();
-			foreach (FileInfo info in infos)
+			foreach (string child in Directory.GetFiles (file))
 			{
-				if (info.Name.Contains (".meta") == false)
+				if (child.Contains (".meta") == false)
 				{
-					paths.Add ("file://" + info);
+					paths.Add ("file://" + child);
+					//Debug.Log ("file://" + child);
 				}
 			}
 		}
@@ -59,6 +55,7 @@ public class AssetLoader : MonoBehaviour {
 		float last = Time.time;
 		DebugConsole.Log ("<----Start Init Resource--->");
 		List<string> paths = GetPathName ();
+		DebugConsole.Log (paths.Count);
 		if (paths.Count > 0)
 		{
 			foreach (string p in paths)
@@ -72,16 +69,17 @@ public class AssetLoader : MonoBehaviour {
 				}
 				else
 				{
-					Debug.LogError (p + "Load error");
+					Debug.LogError (p + "Load error<-------------->" + bundle.error );
+					DebugConsole.LogError (p + "Load error");
 				}
 				bundle.assetBundle.Unload(false);
 			}
+			DebugConsole.Log ("<----Init Resource Success--->Cost Time" + (Time.time - last));
+			if (loadAssetComplete != null)
+			{
+				loadAssetComplete ();
+			}
 		} 
-		DebugConsole.Log ("<----Init Resource Success--->Cost Time" + (Time.time - last));
-		if (loadAssetComplete != null)
-		{
-			loadAssetComplete ();
-		}
 	}
 
 

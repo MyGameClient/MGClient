@@ -13,6 +13,7 @@ public class NetTest : MonoBehaviour {
 	{
 		DC.IsOpen = isOpenDenug;
 		DC.LogWarning ("A,S,D,W controll player dir;\n right mouse click attack \n button spell1,spell2,spell3 is use spell");
+		DC.RegisterCommand ("Res", InitRes);
 		DC.RegisterCommand (OperationCode.Register.ToString (), RegisterTest);
 		DC.RegisterCommand (OperationCode.Login.ToString (), LoginTest);
 		DC.RegisterCommand (OperationCode.GetRoomInfo.ToString (), GetRoomInfo);
@@ -20,6 +21,16 @@ public class NetTest : MonoBehaviour {
 		DC.RegisterCommand (OperationCode.GetAllRoomInfo.ToString (), GetAllRoomInfo);
 		DC.RegisterCommand (OperationCode.QuitRoom.ToString (), QuitRoom);
 		DC.RegisterCommand (OperationCode.RoomSpeak.ToString (), RoomSpeak);
+	}
+
+	private string InitRes (params string[] p)
+	{
+		if (p.Length >= 1)
+		{
+			AssetLoader.instance.Start ();
+			return repose;
+		}
+		return p[0] + " usage";
 	}
 
 	private string RegisterTest (params string[] p)
