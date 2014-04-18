@@ -12,7 +12,7 @@ public class AssetLoader : MonoBehaviour {
 #if UNITY_STANDALONE_WIN || UNITY_EDITOR
 		Application.dataPath + "/MGRes/AD/";
 #elif UNITY_ANDROID   //安卓  
-		"mnt/sdcard/MGRes/";
+		"/mnt/sdcard/MGRes/";
 #elif UNITY_IPHONE  //iPhone  
 	Application.dataPath + "/MGRes/IOS/";
 #else  
@@ -88,11 +88,36 @@ public class AssetLoader : MonoBehaviour {
 		return prefabs[id];
 	}
 
-//	void OnGUI ()
-//	{
-//		if(GUILayout.Button("Main Assetbundle"))  
-//		{  
-////			StartCoroutine (LoadAssetRes ("file://" + Application.dataPath + "/MGRes/PC/PY/PY001.assetbundle"));
-//		}  
-//	}
+	private IEnumerator LoadAssetResTest ()
+	{
+		WWW bundle = new WWW ( "jar:file://" + Application.dataPath + "!/assets/PY001.assetbundle");
+		yield return bundle;
+		yield return Instantiate (bundle.assetBundle.mainAsset);
+	}
+
+	/*void OnGUI ()
+	{
+		if(GUILayout.Button("Main Assetbundle"))  
+		{  
+			StartCoroutine (delayDownload ());
+		}  
+	}
+
+	IEnumerator delayDownload ()
+	{
+		WWW www = new WWW ("ftp://qq459127484:kanni789@002.3vftp.com/Users.txt");
+		yield return www;
+		Debug.Log (www.progress);
+		if (www.error == null)
+		{
+			if (www.isDone)
+			{
+				Debug.Log (www.text);
+			}
+		}
+		else
+		{
+			Debug.Log ("Download error");
+		}
+	}*/
 }
