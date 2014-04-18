@@ -11,22 +11,22 @@ public class NetSend {
 
 	public static void SendRegister (Account a)
 	{
-		PhotonClient.Instance.SendServer<Account> (OperationCode.Register, a);
+		PhotonClient.Instance.SendServer (OperationCode.Register, a);
 	}
 
 	public static void SendLogin (Account a)
 	{
-		PhotonClient.Instance.SendServer<Account> (OperationCode.Login, a);
+		PhotonClient.Instance.SendServer (OperationCode.Login, a);
 	}
 
 	public static void SendGetRoomInfo (Room room)
 	{
-		PhotonClient.Instance.SendServer<Room> (OperationCode.GetRoomInfo, room);
+		PhotonClient.Instance.SendServer (OperationCode.GetRoomInfo, room);
 	}
 
 	public static void SendJoinRoom (Room room)
 	{
-		PhotonClient.Instance.SendServer<Room> (OperationCode.JoinRoom, room);
+		PhotonClient.Instance.SendServer (OperationCode.JoinRoom, room);
 	}
 
 	public static void SendGetAllRoomInfo ()
@@ -41,6 +41,6 @@ public class NetSend {
 
 	public static void SendRoomSpeak (Message message)
 	{
-		PhotonClient.Instance.SendServer<Message> (OperationCode.RoomSpeak, message);
+		PhotonClient.Instance.SendServer (OperationCode.RoomSpeak, message);
 	}
 }

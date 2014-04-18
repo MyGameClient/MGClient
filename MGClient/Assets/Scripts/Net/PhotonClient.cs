@@ -91,17 +91,19 @@ public class PhotonClient : MonoBehaviour, IPhotonPeerListener {
 			break;
 		}
 	}
+
 	public void SendServer (OperationCode operationCode)
 	{
-		SendServer<object> (operationCode, null);
+		SendServer (operationCode, null);
 	}
-	public void SendServer<T> (OperationCode operationCode, T t)
+
+	public void SendServer (OperationCode operationCode, object obj)
 	{
 		Dictionary<byte, object> parameter = null;
-		if (t != null)
+		if (obj != null)
 		{
 			parameter = new Dictionary<byte, object>();
-			string json = JsonConvert.SerializeObject(t);
+			string json = JsonConvert.SerializeObject(obj);
 			parameter.Add ((byte)operationCode, json);
 			Debug.Log (json);
 			DC.Log (json);
