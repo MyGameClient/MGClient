@@ -30,6 +30,7 @@ public class AssetLoader : MonoBehaviour {
 	public void Start ()
 	{
 		StartCoroutine (LoadAssetRes ());
+		StartCoroutine (GameData.Instance.reload ());
 	}
 
 	List<string> GetPathName ()
