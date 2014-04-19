@@ -10,7 +10,7 @@ public class AssetLoader : MonoBehaviour {
 
 	public static readonly string PathURL = 
 #if UNITY_STANDALONE_WIN || UNITY_EDITOR
-		Application.dataPath + "/MGRes/AD/";
+		Application.dataPath + "/MGRes/PC/";
 #elif UNITY_ANDROID   //安卓  
 		"/mnt/sdcard/MGRes/";
 #elif UNITY_IPHONE  //iPhone  
