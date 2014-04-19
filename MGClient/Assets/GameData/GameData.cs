@@ -6,6 +6,9 @@ using System.IO;
 
 public class GameData	{
 
+	public const int DbVersion = 101;
+
+
 	public static readonly string PathURL =
 #if UNITY_STANDALONE_WIN || UNITY_EDITOR
 	"file://" + Application.dataPath + "/StreamingAssets/";
@@ -17,9 +20,15 @@ public class GameData	{
 	string.Empty;
 #endif
 
+	private string LoginDbUrl (string name)
+	{
+		//TODO:
+		return PathURL + name;
+	}
 
 	private Dictionary<string, Troop> enemys = new Dictionary<string, Troop> ();//enemys
 	private Dictionary<string, Troop> players = new Dictionary<string, Troop> ();//player
+	private Dictionary<string, Spell> spells = new Dictionary<string, Spell>();//spells
 
 	public GameData ()
 	{}
@@ -38,7 +47,7 @@ public class GameData	{
 
 	public IEnumerator reload()
 	{
-		Debug.Log ("Open");
+		//Debug.Log ("Open");
 		return OpenDB("MG.db");
 	}
 
@@ -57,7 +66,7 @@ public class GameData	{
 				// ok , this is first time application start!
 				// so lets copy prebuild dtabase from web and load store to persistancePath
 				yield return new WaitForSeconds(1.0f);
-				using (var www = new WWW(PathURL + name))
+				using (var www = new WWW(LoginDbUrl (name)))
 				{
 					while (!www.isDone)
 					{
@@ -65,7 +74,7 @@ public class GameData	{
 					}
 					if (www.error != null)
 					{
-						Debug.Log(www.error +"\n"+ PathURL + name);
+						Debug.Log(www.error +"\n"+ LoginDbUrl (name));
 					}
 					else
 					{
@@ -74,12 +83,11 @@ public class GameData	{
 				}
 			} while (success == false);
 		}
-		else
+		if(!File.Exists(fileName))
 		{
 			DebugConsole.Log ("Open LOCAL DB");
 			loadLocalDb (name, fileName);
 		}
-
 		// it mean we already download prebuild data base and store into persistantPath
 		// lest update, I will call Test
 		try{
@@ -93,10 +101,49 @@ public class GameData	{
 			log += 	"\n on WebPlayer it must give an exception, it's normal.";
 		}
 		int version = getVersion(db);
-		Debug.Log (version);
+		Debug.Log ("OLD***********" + version);
+
+		if (DbVersion > version)
+		{
+			db.Close();
+			bool success = false;
+			do
+			{
+				// ok , this is first time application start!
+				// so lets copy prebuild dtabase from web and load store to persistancePath
+				yield return new WaitForSeconds(1.0f);
+				using (var www = new WWW(LoginDbUrl (name)))
+				{
+					while (!www.isDone)
+					{
+						yield return www;
+					}
+					if (www.error != null)
+					{
+						Debug.Log(www.error +"\n"+ LoginDbUrl (name));
+					}
+					else
+					{
+						success = writeFile(fileName, www.bytes);
+					}
+				}
+			} while (success == false);
+			try{
+				//
+				// initialize database
+				//
+				db.Open(fileName);
+				log += "\nDatabase opened! filename:"+fileName;
+			} catch (Exception e){
+				log += 	"\nTest Fail with Exception " + e.ToString();
+				log += 	"\n on WebPlayer it must give an exception, it's normal.";
+			}
+			Debug.Log ("NEW***********" + getVersion(db));
+		}
 
 		LoadTroops (db);
 		LoadPlayers (db);
+		LoadSpells (db);
 
 		db.Close ();
 	}
@@ -195,6 +242,7 @@ public class GameData	{
 			troop.dmg = (float) qr.GetDouble ("dmg");
 			troop.def = (float) qr.GetDouble ("def");
 			troop.hpMax = (float) qr.GetDouble ("hpMax");
+			troop.hp = troop.hpMax;
 			//DebugConsole.LogError (JsonConvert.SerializeObject(troop));
 			enemys.Add (troop.id, troop);
 		}
@@ -217,8 +265,32 @@ public class GameData	{
 			troop.dmg = (float) qr.GetDouble ("dmg");
 			troop.def = (float) qr.GetDouble ("def");
 			troop.hpMax = (float) qr.GetDouble ("hpMax");
+			troop.hp = troop.hpMax;
 			//DebugConsole.Log (JsonConvert.SerializeObject(troop));
 			players.Add (troop.id, troop);
+		}
+	}
+
+	void LoadSpells (SQLiteDB db)
+	{
+		spells.Clear ();
+		SQLiteQuery qr = new SQLiteQuery(db, "SELECT * FROM Spells"); 
+		while (qr.Step ())
+		{
+			Spell spell = new Spell ();
+			spell.id = qr.GetString ("id");
+			spell.level = qr.GetInteger ("level");
+			spell.type = qr.GetString ("type");
+			spell.assetbundle = qr.GetString ("assetbundle");
+			spell.icon = qr.GetString ("icon");
+			spell.desc = qr.GetString ("desc");
+			spell.name = qr.GetString ("name");
+			spell._dmg = (float) qr.GetDouble ("dmg");
+			spell.pro = qr.GetString ("pro");
+			spell.act = qr.GetString ("act");
+			spell.cd = (float) qr.GetDouble ("cd");
+			DebugConsole.Log (JsonConvert.SerializeObject(spell));
+			spells.Add (spell.id, spell);
 		}
 	}
 

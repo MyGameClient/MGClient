@@ -13,16 +13,16 @@ public class NetTest : MonoBehaviour {
 	{
 		DC.IsOpen = isOpenDenug;
 		DC.LogWarning ("A,S,D,W controll player dir;\n right mouse click attack \n button spell1,spell2,spell3 is use spell");
-		DC.RegisterCommand ("Res", InitRes);
-		DC.RegisterCommand (Commad.Register.ToString (), RegisterTest);
-		DC.RegisterCommand (Commad.Login.ToString (), LoginTest);
-		DC.RegisterCommand (Commad.GetRoomInfo.ToString (), GetRoomInfo);
-		DC.RegisterCommand (Commad.JoinRoom.ToString (), JoinRoom);
-		DC.RegisterCommand (Commad.GetAllRoomInfo.ToString (), GetAllRoomInfo);
-		DC.RegisterCommand (Commad.QuitRoom.ToString (), QuitRoom);
-		DC.RegisterCommand (Commad.RoomSpeak.ToString (), RoomSpeak);
+		DC.RegisterCommand ("LoadRes", InitRes);
+		DC.RegisterCommand (Command.Register.ToString (), RegisterTest);
+		DC.RegisterCommand (Command.Login.ToString (), LoginTest);
+		DC.RegisterCommand (Command.GetRoomInfo.ToString (), GetRoomInfo);
+		DC.RegisterCommand (Command.JoinRoom.ToString (), JoinRoom);
+		DC.RegisterCommand (Command.GetAllRoomInfo.ToString (), GetAllRoomInfo);
+		DC.RegisterCommand (Command.QuitRoom.ToString (), QuitRoom);
+		DC.RegisterCommand (Command.RoomSpeak.ToString (), RoomSpeak);
 
-		DC.RegisterCommand ("InitTroops", InitTroops);
+		DC.RegisterCommand ("FightTest", InitTroops);
 	}
 
 	private string InitRes (params string[] p)
@@ -141,24 +141,8 @@ public class NetTest : MonoBehaviour {
 		{
 			if (AssetLoader.instance.isSuccess)
 			{
-				Bundle bundle = new Bundle();
-				bundle.figth = new Fight ();
-				bundle.figth.map = "MP001";
-				bundle.figth.players = new List<Troop> ();
-				bundle.figth.enemys = new List<Troop> ();
-				Troop troop = GameData.Instance.getPlayerById ("P0001");
-				bundle.figth.players.Add (troop);
-				for (int i = 0; i < 4; i++)
-				{
-					foreach (Troop t in GameData.Instance.getTroops ())
-					{
-						bundle.figth.enemys.Add (t);
-					}
-				}
-				string json = JsonConvert.SerializeObject (bundle);
-				Debug.Log (json);
-				PhotonClient.Instance.CalledProcessResult(bundle);
-				return json;
+				FightTest();
+				return repose;
 			}
 			else
 			{
@@ -167,5 +151,36 @@ public class NetTest : MonoBehaviour {
 			return repose;
 		}
 		return p[0] + " usage";
+	}
+
+	public static void FightTest ()
+	{
+		TextAsset textAsset = Resources.Load ("report", typeof (TextAsset)) as TextAsset;
+		DC.Log (textAsset.text);
+		Bundle bundle = JsonConvert.DeserializeObject<Bundle>(textAsset.text);
+		PhotonClient.Instance.CalledProcessResult(bundle);
+//		Bundle bundle = new Bundle();
+//		bundle.figth = new Fight ();
+//		bundle.figth.players = new List<Troop> ();
+//		bundle.figth.enemys = new List<Troop> ();
+//		Troop troop = GameData.Instance.getPlayerById ("P0001");
+//		bundle.figth.players.Add (troop);
+//		for (int i = 0; i < 4; i++)
+//		{
+//			foreach (Troop t in GameData.Instance.getTroops ())
+//			{
+//				bundle.figth.enemys.Add (t);
+//			}
+//		}
+//		bundle.figth.map = new Map ();
+//		bundle.figth.map.mapName = "MP001";
+//		bundle.figth.map.mapHeigh = 200;
+//		bundle.figth.map.mapWidth = 2000;
+//
+//		string json = JsonConvert.SerializeObject (bundle);
+//		Debug.Log (json);
+//		PhotonClient.Instance.CalledProcessResult(bundle);
+
+
 	}
 }

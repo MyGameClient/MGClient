@@ -12,14 +12,11 @@ public enum State
 
 public class EnemyController : Unit {
 
-	public float MSRate = 2.0f;//TODO: LEVEL DATA
-	public float speed = 100.0f;//TODO: MS DATA
-	public float randge = 100.0f;//TODO: MS DATA
-	public float distanceTest = 400;//TODO: MS DATA
-	public float attMoveDis = 30;//TODO: MS DATA
-	public float hp = 5000;//TODO: MS DATA
-	public float hpMax = 5000;//TODO: MS DATA
-
+	public float MSRate = 2.0f;
+	public float speed = 100.0f;
+	public float randge = 100.0f;
+	public float distanceAtt = 400;
+	public float attMoveDis = 30;
 
 	public static List<EnemyController> enemys = new List<EnemyController> ();
 
@@ -142,7 +139,7 @@ public class EnemyController : Unit {
 		{
 			return;
 		}
-		if (Unit.attDistance (this, target, distanceTest) == true)
+		if (Unit.attDistance (this, target, distanceAtt) == true)
 		{
 			if (Unit.isFront (this, target) == false)
 			{
@@ -154,7 +151,7 @@ public class EnemyController : Unit {
 	}
 	void AnimationEventTriggeredAtt (tk2dSpriteAnimator a, tk2dSpriteAnimationClip b, int c)
 	{
-		if (Unit.attDistance (this, target, distanceTest) == true)
+		if (Unit.attDistance (this, target, distanceAtt) == true)
 		{
 			target.AddEF ("EF001", target);
 			target.Hitted (Clip.Hitted);
@@ -167,15 +164,15 @@ public class EnemyController : Unit {
 	#region Hitted Method
 	public override void ApplyDmg (float dmg, bool isSlider)
 	{
-		hp -= dmg;
+		troop.hp -= dmg;
 		//if (isSlider == true)
 		{
 			if (BloodSlider.instance)
 			{
-				BloodSlider.instance.Refresh (hp / hpMax);
+				BloodSlider.instance.Refresh (troop.hp / troop.hpMax);
 			}
 		}
-		if (hp <= 0)
+		if (troop.hp <= 0)
 		{
 
 			Play (Clip.Die, DieOnComplete, null);

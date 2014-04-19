@@ -19,7 +19,7 @@ public class PlayerInput : MonoBehaviour {
 		float x = Input.GetKey (KeyCode.A) ? -1 : Input.GetKey (KeyCode.D) ? 1 : 0;
 		float y = Input.GetKey (KeyCode.S) ? -1 : Input.GetKey (KeyCode.W) ? 1 : 0;
 		dirIndex = new Vector2 (x, y);
-		if (Input.GetMouseButtonDown (1))
+		if (Input.GetMouseButtonDown (1) || Input.GetKeyDown (KeyCode.J))
 		{
 			if (inputAttDelegate != null)
 			{

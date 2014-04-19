@@ -15,7 +15,7 @@ public class NetRecv : MonoBehaviour {
 
 	void ProcessResult (Bundle bundle)
 	{
-		if (bundle.cmd == Commad.Login)
+		if (bundle.cmd == Command.Login)
 		{
 			Main.Instance.account = bundle.account;
 		}

@@ -92,12 +92,12 @@ public class PhotonClient : MonoBehaviour, IPhotonPeerListener {
 		}
 	}
 
-	public void SendServer (Commad operationCode)
+	public void SendServer (Command operationCode)
 	{
 		SendServer (operationCode, null);
 	}
 
-	public void SendServer (Commad operationCode, object obj)
+	public void SendServer (Command operationCode, object obj)
 	{
 		Dictionary<byte, object> parameter = null;
 		if (obj != null)
@@ -121,7 +121,7 @@ public class PhotonClient : MonoBehaviour, IPhotonPeerListener {
 		Bundle bundle = new Bundle ();
 		string json = operationResponse[operationResponse.OperationCode].ToString();
 		bundle = JsonConvert.DeserializeObject<Bundle>(json);
-		bundle.cmd = (Commad) operationResponse.OperationCode;//cmd
+		bundle.cmd = (Command) operationResponse.OperationCode;//cmd
 		Debug.Log (json);
 		DC.Log(json);
 		CalledProcessResult (bundle);

@@ -28,6 +28,8 @@ public enum Clip
 public abstract class Unit : MonoBehaviour {
 
 
+	public Troop troop;
+
 	protected TweenPosition tweenPosition;
 	protected Spell spell;
 	public bool isSpell

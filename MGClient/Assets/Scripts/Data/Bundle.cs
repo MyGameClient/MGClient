@@ -12,9 +12,9 @@ public class Bundle
 	[DefaultValue (null)]
 	public string notice;
 	[DefaultValue (null)]
-	public Commad cmd;
+	public Command cmd;
 	[DefaultValue (null)]
-	public EventCommad eventCmd;
+	public EventCommand eventCmd;
 
 	[DefaultValue (null)]
 	public Fight figth;

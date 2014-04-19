@@ -3,6 +3,8 @@ using System.Collections;
 
 public class FightData : MonoBehaviour
 {
+	public Fight fight;
+
 	public static FightData instance;
 
 	void Awake ()
@@ -27,35 +29,42 @@ public class FightData : MonoBehaviour
 	{
 		if (bundle.figth != null)
 		{
-			initGO (bundle.figth.map, new Vector3 (0, 0, 1000));
+			fight = bundle.figth;
+			CameraController.instance.width = bundle.figth.map.mapWidth;
+			CameraController.instance.targetMaxHight = bundle.figth.map.mapHeigh;
+			initGO (bundle.figth.map.mapName, bundle.figth.map.mapPos);
 			foreach (Troop player in bundle.figth.players)
 			{
-				initGO (player.assetbundle, new Vector3 (player.x, player.y, 0));
+				initGO (player.assetbundle, new Vector3 (250, 300, 300), player);
 			}
 			foreach (Troop enemy in bundle.figth.enemys)
 			{
-				initGO (enemy.assetbundle, new Vector3 (enemy.x, enemy.y, 0));
+				initGO (enemy.assetbundle, new Vector3 (enemy.x, enemy.y, 0), enemy);
 			}
 		}
 	}
 
 	public void refresh ()
 	{
-//		initGO ("MP001", new Vector3 (0, 0, 1000));
-//		initGO ("PY001", new Vector3 (100, 100, 100));
-//
-//		for (int i = 0; i <= 4; i++)
-//		{
-//			initGO ("MS001", new Vector3 (Random.Range (0, CameraController.instance.width), Random.Range (0, CameraController.instance.targetMaxHight), 0));
-//			initGO ("MS002", new Vector3 (Random.Range (0, CameraController.instance.width), Random.Range (0, CameraController.instance.targetMaxHight), 0));
-//			initGO ("MS003", new Vector3 (Random.Range (0, CameraController.instance.width), Random.Range (0, CameraController.instance.targetMaxHight), 0));
-//		}
+		if (fight == null)
+		{
+			NetTest.FightTest ();
+		}
 	}
 
 	GameObject initGO (string id, Vector3 pos)
 	{
+		return initGO (id, pos, null);
+	}
+
+	GameObject initGO (string id, Vector3 pos, Troop troop)
+	{
 		GameObject go = GameObject.Instantiate (AssetLoader.instance.getIdByPrefabs(id)) as GameObject;
 		go.transform.localPosition = pos;
+		if (troop != null)
+		{
+			go.GetComponent<Unit>().troop = troop;
+		}
 		return go;
 	}
 }

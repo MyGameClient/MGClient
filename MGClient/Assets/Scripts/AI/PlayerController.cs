@@ -2,13 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class Spell
-{
-	public float distance = 400;
-	public float spd = 1500;
-	public float attDistance = 200;
-}
-
 public class PlayerController : Unit {
 
 	//spell
@@ -16,17 +9,9 @@ public class PlayerController : Unit {
 
 	public int maxAtt = 2;
 	//TODO: need data
-	public float distanceTest = 400;
+	public float distanceAtt = 400;
 	public float attMoveDis = 15;
-	public float attDmg = 200;
 
-
-	private float _dmg
-	{
-		get{
-			return Random.Range (attDmg - 10, attDmg + 10);
-		}
-	}
 
 	public static List<PlayerController> players = new List<PlayerController> ();
 	
@@ -136,13 +121,13 @@ public class PlayerController : Unit {
 		for(int i = 0; i < EnemyController.enemys.Count; i++)
 		{
 			EnemyController ec = EnemyController.enemys[i];
-			if (Unit.isFront (this, ec) && Unit.attDistance (this, ec, distanceTest))
+			if (Unit.isFront (this, ec) && Unit.attDistance (this, ec, distanceAtt))
 			{
 				if (ec.isFall == false)
 				{
 					AddEF ("EF001", ec);//TODO:"EF001" need data
 					bool isBig = Random.Range (0, 2) == 1;
-					float dmg = _dmg * (isBig ? 2 : 1);
+					float dmg = troop.attDmg * (isBig ? 2 : 1);
 					AddDMG ("NU001", ec, dmg, isBig);
 					ec.Hitted (currentClip == Clip.AttackLast || currentClip == Clip.spell1 ? Clip.Fall : Clip.Hitted, dmg);
 					ec.HittedMove (attMoveDis * MGMath.getDirNumber (this), this);
@@ -198,7 +183,7 @@ public class PlayerController : Unit {
 		}
 		AddSP ("SP0", -100);
 		float dir = MGMath.getDirNumber (this);
-		MoveToTarget (transform.position + new Vector3 (dir * spell.distance, 0, 0), spell.spd);
+		MoveToTarget (transform.position + new Vector3 (dir * 400, 0, 0), 1500);
 		Play (Clip.spell0);
 		tweenPosition.onUpdate = onUpdateAssault;
 		tweenPosition.onFinished = onFinishAssault;
@@ -208,7 +193,7 @@ public class PlayerController : Unit {
 		for(int i = 0; i < EnemyController.enemys.Count; i++)
 		{
 			EnemyController ec = EnemyController.enemys[i];
-			if (Unit.isFront (this, ec) && Unit.attDistance (this, ec, distanceTest))
+			if (Unit.isFront (this, ec) && Unit.attDistance (this, ec, distanceAtt))
 			{
 				if (ec.isHitted == true)
 				{
@@ -217,7 +202,7 @@ public class PlayerController : Unit {
 				if (ec.isFall == false)
 				{
 					bool isBig = Random.Range (0, 2) == 1;
-					float dmg = _dmg * (isBig ? 2 : 1);
+					float dmg = troop.attDmg * (isBig ? 2 : 1);
 					AddEF ("EF001", ec);//TODO:"EF001" need data
 					AddDMG ("NU001", ec, dmg, isBig);
 					ec.Hitted (Clip.Fall, dmg);
@@ -278,13 +263,13 @@ public class PlayerController : Unit {
 		for(int i = 0; i < EnemyController.enemys.Count; i++)
 		{
 			EnemyController ec = EnemyController.enemys[i];
-			if (Unit.attDistance (this, ec, distanceTest))
+			if (Unit.attDistance (this, ec, distanceAtt))
 			{
 				if (ec.isFall == false)
 				{
 					AddEF ("EF001", ec);//TODO:"EF001" need data
 					bool isBig = Random.Range (0, 2) == 1;
-					float dmg = _dmg * (isBig ? 2 : 1);
+					float dmg = troop.attDmg * (isBig ? 2 : 1);
 					AddDMG ("NU001", ec, dmg, isBig);
 					ec.Hitted (Clip.Hitted, dmg);
 					ec.HittedMove (0/*attMoveDis * MGMath.getDirNumber (this)*/, this);
