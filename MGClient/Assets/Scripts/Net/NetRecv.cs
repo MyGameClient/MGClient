@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
 public class NetRecv : MonoBehaviour {
@@ -15,7 +15,7 @@ public class NetRecv : MonoBehaviour {
 
 	void ProcessResult (Bundle bundle)
 	{
-		if (bundle.cmd == OperationCode.Login)
+		if (bundle.cmd == Commad.Login)
 		{
 			Main.Instance.account = bundle.account;
 		}

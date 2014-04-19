@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 using System;
 using System.Collections.Generic;
@@ -92,12 +92,12 @@ public class PhotonClient : MonoBehaviour, IPhotonPeerListener {
 		}
 	}
 
-	public void SendServer (OperationCode operationCode)
+	public void SendServer (Commad operationCode)
 	{
 		SendServer (operationCode, null);
 	}
 
-	public void SendServer (OperationCode operationCode, object obj)
+	public void SendServer (Commad operationCode, object obj)
 	{
 		Dictionary<byte, object> parameter = null;
 		if (obj != null)
@@ -118,18 +118,20 @@ public class PhotonClient : MonoBehaviour, IPhotonPeerListener {
 	}
 	public void OnOperationResponse (OperationResponse operationResponse)
 	{
-		if (operationResponse.ReturnCode > 0)
+		Bundle bundle = new Bundle ();
+		string json = operationResponse[operationResponse.OperationCode].ToString();
+		bundle = JsonConvert.DeserializeObject<Bundle>(json);
+		bundle.cmd = (Commad) operationResponse.OperationCode;//cmd
+		Debug.Log (json);
+		DC.Log(json);
+		CalledProcessResult (bundle);
+	}
+
+	public void CalledProcessResult (Bundle bundle)
+	{
+		if (ProcessResult != null)
 		{
-			Bundle bundle = new Bundle ();
-			string json = operationResponse[operationResponse.OperationCode].ToString();
-			bundle = JsonConvert.DeserializeObject<Bundle>(json);
-			bundle.cmd = (OperationCode) operationResponse.OperationCode;//cmd
-			Debug.Log (json);
-			DC.Log(json);
-			if (ProcessResult != null)
-			{
-				ProcessResult (bundle);
-			}
+			ProcessResult (bundle);
 		}
 	}
 

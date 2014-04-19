@@ -14,13 +14,15 @@ public class NetTest : MonoBehaviour {
 		DC.IsOpen = isOpenDenug;
 		DC.LogWarning ("A,S,D,W controll player dir;\n right mouse click attack \n button spell1,spell2,spell3 is use spell");
 		DC.RegisterCommand ("Res", InitRes);
-		DC.RegisterCommand (OperationCode.Register.ToString (), RegisterTest);
-		DC.RegisterCommand (OperationCode.Login.ToString (), LoginTest);
-		DC.RegisterCommand (OperationCode.GetRoomInfo.ToString (), GetRoomInfo);
-		DC.RegisterCommand (OperationCode.JoinRoom.ToString (), JoinRoom);
-		DC.RegisterCommand (OperationCode.GetAllRoomInfo.ToString (), GetAllRoomInfo);
-		DC.RegisterCommand (OperationCode.QuitRoom.ToString (), QuitRoom);
-		DC.RegisterCommand (OperationCode.RoomSpeak.ToString (), RoomSpeak);
+		DC.RegisterCommand (Commad.Register.ToString (), RegisterTest);
+		DC.RegisterCommand (Commad.Login.ToString (), LoginTest);
+		DC.RegisterCommand (Commad.GetRoomInfo.ToString (), GetRoomInfo);
+		DC.RegisterCommand (Commad.JoinRoom.ToString (), JoinRoom);
+		DC.RegisterCommand (Commad.GetAllRoomInfo.ToString (), GetAllRoomInfo);
+		DC.RegisterCommand (Commad.QuitRoom.ToString (), QuitRoom);
+		DC.RegisterCommand (Commad.RoomSpeak.ToString (), RoomSpeak);
+
+		DC.RegisterCommand ("InitTroops", InitTroops);
 	}
 
 	private string InitRes (params string[] p)
@@ -95,7 +97,7 @@ public class NetTest : MonoBehaviour {
 				
 			}
 		}
-		return p[0] + "RoomId usage";
+		return p[0] + " RoomId usage";
 	}
 
 	private string GetAllRoomInfo (params string[] p)
@@ -131,5 +133,39 @@ public class NetTest : MonoBehaviour {
 			return repose;
 		}
 		return p[0] + " message usage";
+	}
+
+	private string InitTroops (params string[] p)
+	{
+		if (p.Length >= 1)
+		{
+			if (AssetLoader.instance.isSuccess)
+			{
+				Bundle bundle = new Bundle();
+				bundle.figth = new Fight ();
+				bundle.figth.map = "MP001";
+				bundle.figth.players = new List<Troop> ();
+				bundle.figth.enemys = new List<Troop> ();
+				Troop troop = GameData.Instance.getPlayerById ("P0001");
+				bundle.figth.players.Add (troop);
+				for (int i = 0; i < 4; i++)
+				{
+					foreach (Troop t in GameData.Instance.getTroops ())
+					{
+						bundle.figth.enemys.Add (t);
+					}
+				}
+				string json = JsonConvert.SerializeObject (bundle);
+				Debug.Log (json);
+				PhotonClient.Instance.CalledProcessResult(bundle);
+				return json;
+			}
+			else
+			{
+				return "wait resource loading done";
+			}
+			return repose;
+		}
+		return p[0] + " usage";
 	}
 }

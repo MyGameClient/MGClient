@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class ObjectPool {
 
-	public Dictionary<string, List<GameObject>> objects = new Dictionary<string, List<GameObject>>();
+	private Dictionary<string, List<GameObject>> objects = new Dictionary<string, List<GameObject>>();
 
 	private static ObjectPool _Instance;
 	public static ObjectPool Instance

@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.ComponentModel;
 using System.Collections;
 using System.Collections.Generic;
@@ -12,9 +12,12 @@ public class Bundle
 	[DefaultValue (null)]
 	public string notice;
 	[DefaultValue (null)]
-	public OperationCode cmd;
+	public Commad cmd;
 	[DefaultValue (null)]
-	public EventCode eventCmd;
+	public EventCommad eventCmd;
+
+	[DefaultValue (null)]
+	public Fight figth;
 
 	[DefaultValue (null)]
 	public Account account;

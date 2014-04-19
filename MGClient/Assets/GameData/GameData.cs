@@ -18,7 +18,8 @@ public class GameData	{
 #endif
 
 
-	private Dictionary<string, Troop> troops = new Dictionary<string, Troop> ();
+	private Dictionary<string, Troop> enemys = new Dictionary<string, Troop> ();//enemys
+	private Dictionary<string, Troop> players = new Dictionary<string, Troop> ();//player
 
 	public GameData ()
 	{}
@@ -95,6 +96,7 @@ public class GameData	{
 		Debug.Log (version);
 
 		LoadTroops (db);
+		LoadPlayers (db);
 
 		db.Close ();
 	}
@@ -176,9 +178,9 @@ public class GameData	{
 		return false;
 	}
 
-	public void LoadTroops (SQLiteDB db)
+	void LoadTroops (SQLiteDB db)
 	{
-		troops.Clear ();
+		enemys.Clear ();
 		SQLiteQuery qr = new SQLiteQuery(db, "SELECT * FROM Troops"); 
 		while (qr.Step ())
 		{
@@ -193,8 +195,54 @@ public class GameData	{
 			troop.dmg = (float) qr.GetDouble ("dmg");
 			troop.def = (float) qr.GetDouble ("def");
 			troop.hpMax = (float) qr.GetDouble ("hpMax");
-			//DebugConsole.Log (JsonConvert.SerializeObject(troop));
-			troops.Add (troop.id, troop);
+			//DebugConsole.LogError (JsonConvert.SerializeObject(troop));
+			enemys.Add (troop.id, troop);
 		}
+	}
+
+	void LoadPlayers (SQLiteDB db)
+	{
+		players.Clear ();
+		SQLiteQuery qr = new SQLiteQuery(db, "SELECT * FROM Players"); 
+		while (qr.Step ())
+		{
+			Troop troop = new Troop ();
+			troop.id = qr.GetString ("id");
+			troop.level = qr.GetInteger ("level");
+			troop.type = qr.GetString ("type");
+			troop.assetbundle = qr.GetString ("assetbundle");
+			troop.icon = qr.GetString ("icon");
+			troop.desc = qr.GetString ("desc");
+			troop.name = qr.GetString ("name");
+			troop.dmg = (float) qr.GetDouble ("dmg");
+			troop.def = (float) qr.GetDouble ("def");
+			troop.hpMax = (float) qr.GetDouble ("hpMax");
+			//DebugConsole.Log (JsonConvert.SerializeObject(troop));
+			players.Add (troop.id, troop);
+		}
+	}
+
+	public Troop getPlayerById (string id)
+	{
+		if (players.Count > 0)
+		{
+			Troop troop = null;
+			bool isFind = players.TryGetValue (id, out troop);
+			if (isFind)
+			{
+				return troop;
+			}
+		}
+		return null;
+	}
+
+	public List<Troop> getTroops ()
+	{
+		List<Troop> troops = new List<Troop> ();
+		foreach (KeyValuePair<string, Troop> kvp in enemys)
+		{
+			troops.Add (kvp.Value);
+		}
+		return troops;
 	}
 }

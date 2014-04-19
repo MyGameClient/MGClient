@@ -20,11 +20,11 @@ public class MultiPlayerManager : MonoBehaviour {
 
 	void ProcessResult (Bundle bundle)
 	{
-		if (bundle.cmd == OperationCode.Login)
+		if (bundle.cmd == Commad.Login)
 		{
 			//AddMU (bundle.roomMember);
 		}
-		else if (bundle.cmd == OperationCode.GetRoomInfo)
+		else if (bundle.cmd == Commad.GetRoomInfo)
 		{
 
 		}
@@ -32,7 +32,7 @@ public class MultiPlayerManager : MonoBehaviour {
 
 	void ProcessResultSync (Bundle bundle)
 	{
-		if (bundle.eventCmd == EventCode.JoinRoomNotify)
+		if (bundle.eventCmd == EventCommad.JoinRoomNotify)
 		{
 			if (bundle.roomMember.userId == Main.Instance.account.uniqueId)
 			{

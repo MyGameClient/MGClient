@@ -19,13 +19,14 @@ public class AssetLoader : MonoBehaviour {
 	string.Empty;  
 #endif 
 
-
-
 	private Dictionary<string, GameObject> prefabs = new Dictionary<string, GameObject> ();
 	public static AssetLoader instance; void Awake () { instance = this; }
 
 	public delegate void LoadAssetComplete ();
 	public LoadAssetComplete loadAssetComplete;
+
+	[HideInInspector]
+	public bool isSuccess = false;
 
 	public void Start ()
 	{
@@ -76,6 +77,7 @@ public class AssetLoader : MonoBehaviour {
 				bundle.assetBundle.Unload(false);
 			}
 			DebugConsole.Log ("<----Init Resource Success--->Cost Time" + (Time.time - last));
+			isSuccess = true;
 			if (loadAssetComplete != null)
 			{
 				loadAssetComplete ();

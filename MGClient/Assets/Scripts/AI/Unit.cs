@@ -133,7 +133,7 @@ public abstract class Unit : MonoBehaviour {
 	
 	public void Play (Clip c, Action<tk2dSpriteAnimator, tk2dSpriteAnimationClip> AnimationCompleted, Action<tk2dSpriteAnimator, tk2dSpriteAnimationClip, int> AnimationEventTriggered)
 	{
-		if (tkAnt.CurrentClip == null)
+		if (tkAnt == null || tkAnt.CurrentClip == null)
 		{
 			return;
 		}
