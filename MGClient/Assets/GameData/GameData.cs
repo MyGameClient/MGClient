@@ -6,7 +6,7 @@ using System.IO;
 
 public class GameData	{
 
-	public const int DbVersion = 101;
+	public const int DbVersion = 102;
 
 
 	public static readonly string PathURL =
@@ -339,8 +339,6 @@ public class GameData	{
 		{
 			if (sp.act == act)
 			{
-				Debug.Log (sp._dmg);
-				Debug.Log (sp.dmg);
 				return sp;
 			}
 		}

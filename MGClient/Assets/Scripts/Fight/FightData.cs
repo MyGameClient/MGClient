@@ -39,7 +39,8 @@ public class FightData : MonoBehaviour
 			}
 			foreach (Troop enemy in bundle.figth.enemys)
 			{
-				initGO (enemy.assetbundle, new Vector3 (enemy.x, enemy.y, 0), enemy);
+				if (enemy.assetbundle == "MS004")//TODO:test
+					initGO (enemy.assetbundle, new Vector3 (enemy.x, enemy.y, 0), enemy);
 			}
 		}
 	}
