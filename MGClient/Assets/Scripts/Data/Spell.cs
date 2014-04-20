@@ -34,7 +34,7 @@ public class Spell
 	{
 		get
 		{
-			return _dmg + level * DMG_ADD;//0.2 add;
+			return _dmg + (level - 1) * DMG_ADD;//0.2 add;
 		}
 	}
 }

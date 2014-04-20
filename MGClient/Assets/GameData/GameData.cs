@@ -317,4 +317,35 @@ public class GameData	{
 		}
 		return troops;
 	}
+
+	public List<Spell> getProSpells (string pro)
+	{
+		List<Spell> proSpells = new List<Spell>();
+		foreach (KeyValuePair<string, Spell> kvp in spells)
+		{
+			if (kvp.Value.pro == pro)
+			{
+				proSpells.Add (kvp.Value);
+			}
+		}
+		return proSpells;
+	}
+
+	public Spell getSpByIdPro (string pro, string act)
+	{
+		List<Spell> spell = new List<Spell>();
+		spell = getProSpells (pro);
+		foreach (Spell sp in spell)
+		{
+			if (sp.act == act)
+			{
+				Debug.Log (sp._dmg);
+				Debug.Log (sp.dmg);
+				return sp;
+			}
+		}
+		Spell s = new Spell();
+		s._dmg = 1;
+		return s;
+	}
 }

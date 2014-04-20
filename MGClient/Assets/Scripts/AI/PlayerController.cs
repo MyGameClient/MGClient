@@ -127,7 +127,7 @@ public class PlayerController : Unit {
 				{
 					AddEF ("EF001", ec);//TODO:"EF001" need data
 					bool isBig = Random.Range (0, 2) == 1;
-					float dmg = troop.attDmg * (isBig ? 2 : 1);
+					float dmg = troop.attDmg * GameData.Instance.getSpByIdPro (MGConstant.PRO.ZS, currentClip.ToString()).dmg * (isBig ? 2 : 1);
 					AddDMG ("NU001", ec, dmg, isBig);
 					ec.Hitted (currentClip == Clip.AttackLast || currentClip == Clip.spell1 ? Clip.Fall : Clip.Hitted, dmg);
 					ec.HittedMove (attMoveDis * MGMath.getDirNumber (this), this);
@@ -202,7 +202,7 @@ public class PlayerController : Unit {
 				if (ec.isFall == false)
 				{
 					bool isBig = Random.Range (0, 2) == 1;
-					float dmg = troop.attDmg * (isBig ? 2 : 1);
+					float dmg = troop.attDmg * GameData.Instance.getSpByIdPro (MGConstant.PRO.ZS, currentClip.ToString()).dmg * (isBig ? 2 : 1);
 					AddEF ("EF001", ec);//TODO:"EF001" need data
 					AddDMG ("NU001", ec, dmg, isBig);
 					ec.Hitted (Clip.Fall, dmg);
@@ -269,7 +269,7 @@ public class PlayerController : Unit {
 				{
 					AddEF ("EF001", ec);//TODO:"EF001" need data
 					bool isBig = Random.Range (0, 2) == 1;
-					float dmg = troop.attDmg * (isBig ? 2 : 1);
+					float dmg = troop.attDmg * GameData.Instance.getSpByIdPro (MGConstant.PRO.ZS, currentClip.ToString()).dmg * (isBig ? 2 : 1);
 					AddDMG ("NU001", ec, dmg, isBig);
 					ec.Hitted (Clip.Hitted, dmg);
 					ec.HittedMove (0/*attMoveDis * MGMath.getDirNumber (this)*/, this);
