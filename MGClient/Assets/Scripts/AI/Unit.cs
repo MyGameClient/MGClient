@@ -240,6 +240,13 @@ public abstract class Unit : MonoBehaviour {
 		float y = Mathf.Abs(def.transform.position.y - att.transform.position.y);
 		return x <= disVal / 2 && y <= disVal / 10;
 	}
+
+	public static bool bowAttDistance (Vector3 att, Unit def, float disVal)
+	{
+		float x = Mathf.Abs(def.transform.position.x - att.x);
+		float y = Mathf.Abs(def.transform.position.y + def.height - att.y);
+		return x <= disVal / 2 && y <= disVal / 2;
+	}
 	
 	public static bool isFront (Unit att, Unit def)
 	{

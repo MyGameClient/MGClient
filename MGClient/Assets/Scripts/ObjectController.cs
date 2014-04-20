@@ -17,6 +17,10 @@ public class ObjectController : MonoBehaviour {
 
 	void AnimationCompletedHidden (tk2dSpriteAnimator a, tk2dSpriteAnimationClip b)
 	{
+		if (transform.parent != null)
+		{
+			transform.parent.gameObject.SetActive (false);
+		}
 		gameObject.SetActive (false);
 	}
 }

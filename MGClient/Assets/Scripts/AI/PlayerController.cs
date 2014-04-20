@@ -4,8 +4,12 @@ using System.Collections.Generic;
 
 public class PlayerController : Unit {
 
-	//spell
-	Spell spell = new Spell ();
+	public enum AttMode
+	{
+		INF,
+		BOW
+	}
+	public AttMode attMode = AttMode.INF;
 
 	public int maxAtt = 2;
 	//TODO: need data
@@ -71,13 +75,20 @@ public class PlayerController : Unit {
 	private int atInx = 0;
 	void inputAttDelegate()
 	{
-		atInx++;
-		atInx = Mathf.Min (atInx, maxAtt);
-
-		if (isIng == false)
+		if (attMode == AttMode.INF)
 		{
-			isIng = true;
-			StartCoroutine (attInterver ());
+			atInx++;
+			atInx = Mathf.Min (atInx, maxAtt);
+
+			if (isIng == false)
+			{
+				isIng = true;
+				StartCoroutine (attInterver ());
+			}
+		}
+		else if (attMode == AttMode.BOW)
+		{
+			Play (Clip.Hit, null, AnimationEventTriggeredAtt);
 		}
 	}
 
@@ -97,11 +108,45 @@ public class PlayerController : Unit {
 
 	void AnimationEventTriggeredAtt (tk2dSpriteAnimator a, tk2dSpriteAnimationClip b, int c)
 	{
-		//TODO:
-		HitTarget ();
-		MoveForwrd ();
+		if (attMode == AttMode.INF)
+		{
+			HitTarget ();
+			MoveForwrd ();
+		}
+		else if (attMode == AttMode.BOW)
+		{
+			GameObject go = ObjectPool.Instance.LoadObject ("BF001");
+			Vector3 POS = Vector3.zero;
+			POS.x = transform.position.x;
+			POS.y = transform.position.y + height + height / 2;
+			POS.z = POS.y;
+			go.transform.position = POS;
+
+			go.GetComponent<MissileObject>().Refresh (transform.position, tkSp.scale.x, 400, hitTargetEvent);
+		}
 	}
 
+	void hitTargetEvent (Vector3 pos, MissileObject mOjc)
+	{
+		for(int i = 0; i < EnemyController.enemys.Count; i++)
+		{
+			EnemyController ec = EnemyController.enemys[i];
+			if (Unit.bowAttDistance (pos, ec, distanceAtt))
+			{
+				if (ec.isFall == false)
+				{
+					//AddEF ("EF001", ec);//TODO:"EF001" need data
+					bool isBig = Random.Range (0, 2) == 1;
+					float dmg = troop.attDmg * GameData.Instance.getSpByIdPro (MGConstant.PRO.ZS, currentClip.ToString()).dmg * (isBig ? 2 : 1);
+					AddDMG ("NU001", ec, dmg, isBig);
+					ec.Hitted (currentClip == Clip.AttackLast || currentClip == Clip.spell1 ? Clip.Fall : Clip.Hitted, dmg);
+					ec.HittedMove (attMoveDis * MGMath.getDirNumber (this), this);
+
+					mOjc.ShowMissile ();
+				}
+			}
+		}
+	}
 
 	#region Hit Method
 	private void MoveForwrd ()
