@@ -2,14 +2,32 @@
 using System.Collections;
 using System.Collections.Generic;
 
+
+public enum AttMode
+{
+	INF,
+	BOW
+}
+
+public enum PRO
+{
+	ZS,
+	FS,
+	LR,
+	DZ,
+}
+
 public class PlayerController : Unit {
 
-	public enum AttMode
-	{
-		INF,
-		BOW
-	}
+
 	public AttMode attMode = AttMode.INF;
+	public PRO pro = PRO.ZS;
+	private string proString
+	{
+		get{
+			return pro.ToString();
+		}
+	}
 
 	public int maxAtt = 2;
 	//TODO: need data
@@ -115,15 +133,26 @@ public class PlayerController : Unit {
 		}
 		else if (attMode == AttMode.BOW)
 		{
-			GameObject go = ObjectPool.Instance.LoadObject ("BF001");
-			Vector3 POS = Vector3.zero;
-			POS.x = transform.position.x;
-			POS.y = transform.position.y + height + height / 2;
-			POS.z = POS.y;
-			go.transform.position = POS;
-
-			go.GetComponent<MissileObject>().Refresh (transform.position, tkSp.scale.x, 400, hitTargetEvent);
+			if (currentClip == Clip.spell0)
+			{
+				LR_Shoot ("BF002");
+				return;
+			}
+			LR_Shoot ("BF001");
 		}
+	}
+
+	//LR
+	void LR_Shoot(string ef)
+	{
+		GameObject go = ObjectPool.Instance.LoadObject (ef);
+		Vector3 POS = Vector3.zero;
+		POS.x = transform.position.x;
+		POS.y = transform.position.y + height + height / 2;
+		POS.z = POS.y;
+		go.transform.position = POS;
+		
+		go.GetComponent<MissileObject>().Refresh (transform.position, tkSp.scale.x, 800, hitTargetEvent);
 	}
 
 	void hitTargetEvent (Vector3 pos, MissileObject mOjc)
@@ -137,7 +166,7 @@ public class PlayerController : Unit {
 				{
 					//AddEF ("EF001", ec);//TODO:"EF001" need data
 					bool isBig = Random.Range (0, 2) == 1;
-					float dmg = troop.attDmg * GameData.Instance.getSpByIdPro (MGConstant.PRO.ZS, currentClip.ToString()).dmg * (isBig ? 2 : 1);
+					float dmg = troop.attDmg * GameData.Instance.getSpByIdPro (proString, currentClip.ToString()).dmg * (isBig ? 2 : 1);
 					AddDMG ("NU001", ec, dmg, isBig);
 					ec.Hitted (currentClip == Clip.AttackLast || currentClip == Clip.spell1 ? Clip.Fall : Clip.Hitted, dmg);
 					ec.HittedMove (attMoveDis * MGMath.getDirNumber (this), this);
@@ -172,7 +201,7 @@ public class PlayerController : Unit {
 				{
 					AddEF ("EF001", ec);//TODO:"EF001" need data
 					bool isBig = Random.Range (0, 2) == 1;
-					float dmg = troop.attDmg * GameData.Instance.getSpByIdPro (MGConstant.PRO.ZS, currentClip.ToString()).dmg * (isBig ? 2 : 1);
+					float dmg = troop.attDmg * GameData.Instance.getSpByIdPro (proString, currentClip.ToString()).dmg * (isBig ? 2 : 1);
 					AddDMG ("NU001", ec, dmg, isBig);
 					ec.Hitted (currentClip == Clip.AttackLast || currentClip == Clip.spell1 ? Clip.Fall : Clip.Hitted, dmg);
 					ec.HittedMove (attMoveDis * MGMath.getDirNumber (this), this);
@@ -208,7 +237,7 @@ public class PlayerController : Unit {
 	public override void ApplyDmg (float dmg, bool isSlider)
 	{}
 
-	#region spell
+	#region ZS spell
 	void hiddenSpells ()
 	{
 		for (int i = 0; i < transform.childCount; i++)
@@ -247,7 +276,7 @@ public class PlayerController : Unit {
 				if (ec.isFall == false)
 				{
 					bool isBig = Random.Range (0, 2) == 1;
-					float dmg = troop.attDmg * GameData.Instance.getSpByIdPro (MGConstant.PRO.ZS, currentClip.ToString()).dmg * (isBig ? 2 : 1);
+					float dmg = troop.attDmg * GameData.Instance.getSpByIdPro (proString, currentClip.ToString()).dmg * (isBig ? 2 : 1);
 					AddEF ("EF001", ec);//TODO:"EF001" need data
 					AddDMG ("NU001", ec, dmg, isBig);
 					ec.Hitted (Clip.Fall, dmg);
@@ -290,7 +319,7 @@ public class PlayerController : Unit {
 		}
 		cancel ();
 		Play (Clip.spell2, null, AnimationEventTriggeredAtt);
-		InvokeRepeating ("UpdateDmg", 0.1f, 0.8f);
+		InvokeRepeating ("UpdateDmg", 0.1f, 0.5f);
 		AddSP ("SP2");
 		Invoke ("cancel", currentClipTime);
 	}
@@ -314,7 +343,7 @@ public class PlayerController : Unit {
 				{
 					AddEF ("EF001", ec);//TODO:"EF001" need data
 					bool isBig = Random.Range (0, 2) == 1;
-					float dmg = troop.attDmg * GameData.Instance.getSpByIdPro (MGConstant.PRO.ZS, currentClip.ToString()).dmg * (isBig ? 2 : 1);
+					float dmg = troop.attDmg * GameData.Instance.getSpByIdPro (proString, currentClip.ToString()).dmg * (isBig ? 2 : 1);
 					AddDMG ("NU001", ec, dmg, isBig);
 					ec.Hitted (Clip.Hitted, dmg);
 					ec.HittedMove (0/*attMoveDis * MGMath.getDirNumber (this)*/, this);
@@ -324,6 +353,49 @@ public class PlayerController : Unit {
 	}
 	#endregion
 
+	#region LR
+	void ShootThird ()
+	{
+		Play (Clip.spell0, null, AnimationEventTriggeredAtt);
+	}
+	#endregion
+
+
+	#region spell
+	void shootSpell0 ()
+	{
+		if (pro == PRO.ZS)
+		{
+			assault ();
+		}
+		else if (pro == PRO.LR)
+		{
+			ShootThird ();
+		}
+	}
+	void shootSpell1 ()
+	{
+		if (pro == PRO.ZS)
+		{
+			JumpAtt ();
+		}
+		else if (pro == PRO.LR)
+		{
+
+		}
+	}
+	void shootSpell2 ()
+	{
+		if (pro == PRO.ZS)
+		{
+			cyclone ();
+		}
+		else if (pro == PRO.LR)
+		{
+
+		}
+	}
+	#endregion
 
 	#region DEBUG
 	public const int max = 3;
@@ -341,15 +413,19 @@ public class PlayerController : Unit {
 	{
 		if (i == 0)
 		{
-			assault ();
+			shootSpell0 ();
+			//assault ();
 		}
 		else if (i == 1)
 		{
-			JumpAtt ();
+			shootSpell1 ();
+			//JumpAtt ();
 		}
 		else if (i == 2)
 		{
-			cyclone ();
+
+			shootSpell2 ();
+			//cyclone ();
 		}
 	}
 	#endregion

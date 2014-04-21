@@ -57,7 +57,8 @@ public class MissileObject : MonoBehaviour {
 		}
 		if (Mathf.Abs(transform.position.x - x) >= max)
 		{
-			ShowMissile ();
+			gameObject.SetActive (false);
+			//ShowMissile ();
 		}
 	}
 
