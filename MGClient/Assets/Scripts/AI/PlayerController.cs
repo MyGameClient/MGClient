@@ -135,7 +135,26 @@ public class PlayerController : Unit {
 		{
 			if (currentClip == Clip.spell0)
 			{
+				//LR_Shoot ();
 				LR_Shoot ("BF002");
+				return;
+			}
+			else if (currentClip == Clip.spell1)
+			{
+				//NotificationCenter.PostNotification (this, "PlayShake");
+				GameObject go = ObjectPool.Instance.LoadObject ("BF003");
+				Vector3 POS = Vector3.zero;
+				POS.x = transform.position.x;
+				POS.y = transform.position.y + height + height / 2;
+				POS.z = POS.y;
+				go.transform.position = POS;
+				
+				go.GetComponent<MissileObject>().Refresh (transform.position, tkSp.scale.x, 800, hitTargetEvent, hitTargetAOE);
+				return;
+			}
+			else if (currentClip == Clip.spell2)
+			{
+				LR_Shoot ("BF004", false);
 				return;
 			}
 			LR_Shoot ("BF001");
@@ -143,7 +162,7 @@ public class PlayerController : Unit {
 	}
 
 	//LR
-	void LR_Shoot(string ef)
+	void LR_Shoot(string ef, bool isHidden = true)
 	{
 		GameObject go = ObjectPool.Instance.LoadObject (ef);
 		Vector3 POS = Vector3.zero;
@@ -152,7 +171,12 @@ public class PlayerController : Unit {
 		POS.z = POS.y;
 		go.transform.position = POS;
 		
-		go.GetComponent<MissileObject>().Refresh (transform.position, tkSp.scale.x, 800, hitTargetEvent);
+		MissileObject.HitTargetEvent events = null;
+		if (isHidden == true)
+		{
+			events = hitTargetEvent;
+		}
+		go.GetComponent<MissileObject>().Refresh (transform.position, tkSp.scale.x, 800,  events);
 	}
 
 	void hitTargetEvent (Vector3 pos, MissileObject mOjc)
@@ -168,10 +192,29 @@ public class PlayerController : Unit {
 					bool isBig = Random.Range (0, 2) == 1;
 					float dmg = troop.attDmg * GameData.Instance.getSpByIdPro (proString, currentClip.ToString()).dmg * (isBig ? 2 : 1);
 					AddDMG ("NU001", ec, dmg, isBig);
-					ec.Hitted (currentClip == Clip.AttackLast || currentClip == Clip.spell1 ? Clip.Fall : Clip.Hitted, dmg);
+					ec.Hitted (Clip.Stand, dmg);
 					ec.HittedMove (attMoveDis * MGMath.getDirNumber (this), this);
 
 					mOjc.ShowMissile ();
+				}
+			}
+		}
+	}
+	void hitTargetAOE (Vector3 pos)
+	{
+		for(int i = 0; i < EnemyController.enemys.Count; i++)
+		{
+			EnemyController ec = EnemyController.enemys[i];
+			if (Unit.bowAttDistance (pos, ec, distanceAtt * 2))
+			{
+				if (ec.isFall == false)
+				{
+					//AddEF ("EF001", ec);//TODO:"EF001" need data
+					bool isBig = Random.Range (0, 2) == 1;
+					float dmg = troop.attDmg * GameData.Instance.getSpByIdPro (proString, currentClip.ToString()).dmg * (isBig ? 2 : 1);
+					AddDMG ("NU001", ec, dmg, isBig);
+					ec.Hitted (Clip.Hitted, dmg);
+					ec.HittedMove (attMoveDis * MGMath.getDirNumber (this), this);
 				}
 			}
 		}
@@ -358,12 +401,24 @@ public class PlayerController : Unit {
 	{
 		Play (Clip.spell0, null, AnimationEventTriggeredAtt);
 	}
+	void shootExplose()
+	{
+		Play (Clip.spell1, null, AnimationEventTriggeredAtt);
+	}
+	void shootRain ()
+	{
+		Play (Clip.spell2, null, AnimationEventTriggeredAtt);
+	}
 	#endregion
 
 
 	#region spell
 	void shootSpell0 ()
 	{
+		if (isFall == true || isHitted == true || isSpell == true)
+		{
+			return;
+		}
 		if (pro == PRO.ZS)
 		{
 			assault ();
@@ -375,24 +430,32 @@ public class PlayerController : Unit {
 	}
 	void shootSpell1 ()
 	{
+		if (isFall == true || isHitted == true || isSpell == true)
+		{
+			return;
+		}
 		if (pro == PRO.ZS)
 		{
 			JumpAtt ();
 		}
 		else if (pro == PRO.LR)
 		{
-
+			shootExplose ();
 		}
 	}
 	void shootSpell2 ()
 	{
+		if (isFall == true || isHitted == true || isSpell == true)
+		{
+			return;
+		}
 		if (pro == PRO.ZS)
 		{
 			cyclone ();
 		}
 		else if (pro == PRO.LR)
 		{
-
+			shootRain ();
 		}
 	}
 	#endregion

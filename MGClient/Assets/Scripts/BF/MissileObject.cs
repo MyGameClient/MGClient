@@ -24,21 +24,24 @@ public class MissileObject : MonoBehaviour {
 		}
 	}
 
-	private tk2dSprite _tkSp;
-	private tk2dSprite tkSp
+	private tk2dUISpriteAnimator _tkSp;
+	private tk2dUISpriteAnimator tkSp
 	{
 		get{
 			if (_tkSp == null)
 			{
-				_tkSp = GetComponent<tk2dSprite>();
+				_tkSp = GetComponent<tk2dUISpriteAnimator>();
 			}
 			return _tkSp;
 		}
 	}
 
-	void Start () 
+	void OnEnable ()
 	{
-	
+		if (tkSp != null)
+		{
+			tkSp.Play ();
+		}
 	}
 
 	public delegate void HitTargetEvent (Vector3 pos, MissileObject mObj);
@@ -72,11 +75,18 @@ public class MissileObject : MonoBehaviour {
 
 	public void Refresh (Vector3 startPos, float dir, float max, HitTargetEvent hitTargetEvent)
 	{
+		Refresh (startPos, dir, max, hitTargetEvent, null);
+	}
+
+	public void Refresh (Vector3 startPos, float dir, float max, HitTargetEvent hitTargetEvent, ObjectController.HitTargetAoe hitTargetAoe)
+	{
 		this.enabled = true;
 		mr.enabled = true;
 		x = transform.position.x;
 		this.startPos = startPos;
 		this.hitTargetEvent = hitTargetEvent;
+		if (child != null)
+			child.GetComponent<ObjectController>().hitTargetAoe = hitTargetAoe;
 		this.dir = dir;
 		this.max = max;
 		gameObject.SetActive (true);

@@ -21,7 +21,8 @@ public enum Clip
 	spell0,
 	spell1,
 	spell2,
-	Die
+	Die,
+	Null,
 	
 }
 
