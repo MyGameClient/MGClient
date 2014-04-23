@@ -289,7 +289,7 @@ public class GameData	{
 			spell.pro = qr.GetString ("pro");
 			spell.act = qr.GetString ("act");
 			spell.cd = (float) qr.GetDouble ("cd");
-			DebugConsole.Log (JsonConvert.SerializeObject(spell));
+			//DebugConsole.Log (JsonConvert.SerializeObject(spell));
 			spells.Add (spell.id, spell);
 		}
 	}

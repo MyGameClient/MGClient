@@ -11,4 +11,9 @@ public class ButtonAtt : MonoBehaviour {
 		gameObject.SetActive (true);
 #endif
 	}
+
+	public void OnClick ()
+	{
+		PlayerInput.AttNormal ();
+	}
 }

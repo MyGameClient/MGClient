@@ -21,10 +21,7 @@ public class PlayerInput : MonoBehaviour {
 		dirIndex = new Vector2 (x, y);
 		if (Input.GetMouseButtonDown (1) || Input.GetKeyDown (KeyCode.J))
 		{
-			if (inputAttDelegate != null)
-			{
-				inputAttDelegate ();
-			}
+			AttNormal ();
 
 		}
 #elif UNITY_ANDROID || UNITY_IPHONE
@@ -33,6 +30,14 @@ public class PlayerInput : MonoBehaviour {
 		if (inputDirDelegate != null)
 		{
 			inputDirDelegate (dirIndex);
+		}
+	}
+
+	public static void AttNormal ()
+	{
+		if (inputAttDelegate != null)
+		{
+			inputAttDelegate ();
 		}
 	}
 }

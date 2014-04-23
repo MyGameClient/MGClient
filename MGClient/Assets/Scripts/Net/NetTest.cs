@@ -156,7 +156,7 @@ public class NetTest : MonoBehaviour {
 	public static void FightTest ()
 	{
 		TextAsset textAsset = Resources.Load ("report", typeof (TextAsset)) as TextAsset;
-		DC.Log (textAsset.text);
+		//DC.Log (textAsset.text);
 		Bundle bundle = JsonConvert.DeserializeObject<Bundle>(textAsset.text);
 		PhotonClient.Instance.CalledProcessResult(bundle);
 //		Bundle bundle = new Bundle();

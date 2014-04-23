@@ -13,7 +13,7 @@ public class FightData : MonoBehaviour
 		PhotonClient.ProcessResult += ProcessResult;
 	}
 
-	public void OnDiable ()
+	public void OnDisable ()
 	{
 		PhotonClient.ProcessResult -= ProcessResult;
 		instance = null;

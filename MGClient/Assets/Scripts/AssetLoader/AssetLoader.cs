@@ -10,7 +10,7 @@ public class AssetLoader : MonoBehaviour {
 
 	public static readonly string PathURL = 
 #if UNITY_STANDALONE_WIN || UNITY_EDITOR
-		Application.dataPath + "/MGRes/PC/";
+		Application.dataPath + "/MGRes/AD/";
 #elif UNITY_ANDROID   //安卓  
 		"/mnt/sdcard/MGRes/";
 #elif UNITY_IPHONE  //iPhone  
@@ -18,6 +18,8 @@ public class AssetLoader : MonoBehaviour {
 #else  
 	string.Empty;  
 #endif 
+
+	//private Dictionary<string, AssetBundle> assetBundles = new Dictionary<string, AssetBundle> ();
 
 	private Dictionary<string, GameObject> prefabs = new Dictionary<string, GameObject> ();
 	public static AssetLoader instance; void Awake () { instance = this; }
@@ -66,16 +68,25 @@ public class AssetLoader : MonoBehaviour {
 				yield return bundle;
 				if (bundle.error == null)
 				{
+					//assetBundles.Add (p, bundle.assetBundle);
 					GameObject prefab = (GameObject) bundle.assetBundle.mainAsset;
 					prefabs.Add (prefab.name, prefab);
+					bundle.assetBundle.Unload (false);
+					//Debug.Log (prefabs[prefab.name]);
+					bundle.Dispose();
+					bundle = null;
 				}
 				else
 				{
 					Debug.LogError (p + "Load error<-------------->" + bundle.error );
 					DebugConsole.LogError (p + "Load error");
 				}
-				bundle.assetBundle.Unload(false);
 			}
+			//Debug.Log ();
+//			foreach (KeyValuePair<string, AssetBundle> kvp in assetBundles)
+//			{
+//				Debug.Log (kvp.Value + "______" + kvp.Key);
+//			}
 			DebugConsole.Log ("<----Init Resource Success--->Cost Time" + (Time.time - last));
 			isSuccess = true;
 			if (loadAssetComplete != null)
@@ -91,22 +102,22 @@ public class AssetLoader : MonoBehaviour {
 		return prefabs[id];
 	}
 
-	private IEnumerator LoadAssetResTest ()
+	public void clear ()
 	{
-		WWW bundle = new WWW ( "jar:file://" + Application.dataPath + "!/assets/PY001.assetbundle");
-		yield return bundle;
-		yield return Instantiate (bundle.assetBundle.mainAsset);
+		prefabs.Clear ();
+		Resources.UnloadUnusedAssets();
 	}
 
-	/*void OnGUI ()
+	void OnGUI ()
 	{
-		if(GUILayout.Button("Main Assetbundle"))  
+		if (GUI.Button (new Rect (400,0, 100, 100), "Load Next"))
 		{  
-			StartCoroutine (delayDownload ());
+			clear ();
+			Application.LoadLevel ("PublicZone");
 		}  
 	}
 
-	IEnumerator delayDownload ()
+	/*IEnumerator delayDownload ()
 	{
 		WWW www = new WWW ("ftp://qq459127484:kanni789@002.3vftp.com/Users.txt");
 		yield return www;
