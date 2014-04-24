@@ -34,14 +34,14 @@ public class Troop
 	public float x
 	{
 		get{
-			return Random.Range (0, CameraController.instance.width);
+			return 0;//Random.Range (0, CameraController.instance.width);
 		}
 	}
 	[DefaultValue (0F)]
 	public float y
 	{
 		get{
-			return Random.Range (0, CameraController.instance.targetMaxHight);
+			return 0;//Random.Range (0, CameraController.instance.targetMaxHight);
 		}
 	}
 

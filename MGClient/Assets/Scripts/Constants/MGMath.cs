@@ -19,7 +19,7 @@ public class JsonConvert
 
 public class MGMath {
 
-	public static Vector3 getClampPos (Vector3 v)
+	/*public static Vector3 getClampPos (Vector3 v)
 	{
 		float x = Mathf.Clamp (v.x, 0, CameraController.instance.width);
 		float y = Mathf.Clamp (v.y, 0, CameraController.instance.targetMaxHight);
@@ -42,6 +42,6 @@ public class MGMath {
 	{
 		Vector3 v = new Vector3 (target.position.x + RD.Range (-randge, randge), target.position.y + RD.Range (-randge, randge), 0);
 		return getClampPos (v);
-	}
+	}*/
 
 }
