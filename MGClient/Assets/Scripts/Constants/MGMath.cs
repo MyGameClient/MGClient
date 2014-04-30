@@ -19,6 +19,20 @@ public class JsonConvert
 
 public class MGMath {
 
+	public static float UPDATE_RATE
+	{
+		get
+		{
+			return (float)1 / (float)30;
+		}
+	}
+	
+	public static void UpdateMove (float startTime, Transform target, Vector3 dir)
+	{
+		target.position = Vector3.Lerp (target.position, dir, Time.time - startTime);
+	}
+
+
 	/*public static Vector3 getClampPos (Vector3 v)
 	{
 		float x = Mathf.Clamp (v.x, 0, CameraController.instance.width);
