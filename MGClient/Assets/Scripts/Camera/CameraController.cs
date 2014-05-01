@@ -13,6 +13,10 @@ public class CameraController : MonoBehaviour {
 
 	void LateUpdate ()
 	{
+		if (target == null)
+		{
+			Debug.Log (this.name + "'s target is null");
+		}
 		float x = target.position.x;
 		float z = target.position.z;
 

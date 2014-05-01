@@ -41,7 +41,7 @@ public class FPSInputController : MonoBehaviour {
 				transform.forward = m_directionVector;
 			// Get the length of the directon vector and then normalize it
 			// Dividing by the length is cheaper than normalizing when we already have the length anyway
-			var directionLength = m_directionVector.magnitude;
+			/*var directionLength = m_directionVector.magnitude;
 			m_directionVector = m_directionVector / directionLength;
 			
 			// Make sure the length is no bigger than 1
@@ -52,13 +52,12 @@ public class FPSInputController : MonoBehaviour {
 			directionLength = directionLength * directionLength;
 			
 			// Multiply the normalized direction vector by the modified length
-			m_directionVector = m_directionVector * directionLength;
+			m_directionVector = m_directionVector * directionLength;*/
 		}
 		
 		// Apply the direction to the CharacterMotor
-		
 		m_motor.inputMoveDirection = m_directionVector;
-		m_motor.inputJump = Input.GetButtonDown("Jump");
+		//m_motor.inputJump = Input.GetButtonDown("Jump");
 	}
 	
 }

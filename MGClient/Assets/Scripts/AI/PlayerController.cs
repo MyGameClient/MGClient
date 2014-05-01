@@ -1,6 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+[RequireComponent(typeof(SpellController))]
+[RequireComponent(typeof(AnimationPlayer))]
+[RequireComponent(typeof(FPSInputController))]
 public class PlayerController : MonoBehaviour {
 
 	public float attDistance = 1.5f;
@@ -32,14 +35,13 @@ public class PlayerController : MonoBehaviour {
 	{
 		startTime = Time.time;
 		dir = transform.forward.normalized + transform.position;
-		InvokeRepeating ("UpdateFront", 0,  MGMath.UPDATE_RATE);
-		Invoke ("ResetFront", 0.1f);
+		//InvokeRepeating ("UpdateFront", 0,  MGMath.UPDATE_RATE);
+		//Invoke ("ResetFront", 0.1f);
 		foreach (EnemyController e in EnemyController.enemys)
 		{
 
 			Vector3 forward = transform.forward;
 			Vector3 toOther = e.transform.position - transform.position;
-			//Debug.Log (Vector3.Distance (e.transform.position, transform.position) + "____" + Vector3.Dot (forward, toOther));
 			if (Vector3.Distance (e.transform.position, transform.position) <= attDistance && Vector3.Dot (forward, toOther) >= 0)
 			{
 				e.HitTarget (transform);
@@ -49,7 +51,8 @@ public class PlayerController : MonoBehaviour {
 
 	void UpdateFront ()
 	{
-		MGMath.UpdateMove (startTime, transform, dir);
+		//fpsController.motor.characterController.SimpleMove (transform.forward);
+		//MGMath.UpdateMove (startTime, transform, dir);
 	}
 
 	void ResetFront ()
@@ -68,6 +71,7 @@ public class PlayerController : MonoBehaviour {
 		}
 		if (animationPlayer.dontMove)
 		{
+			//Debug.Log ("heihei");
 			return;
 		}
 		//Move
@@ -88,20 +92,23 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	private bool IsIng = false;
-	private bool canResponse = true;
-	private int maxAttackCount = 2;
-	private int attckId = 0;
+	private float startAttTime = 0;
+	public int maxAttackCount = 2;
+	private int attckId = -1;
 	void Attack ()
 	{
-		if (canResponse == false)
-		{
-			canResponse = true;
-			attckId++;
-		}
 		if (IsIng == false)
 		{
+			attckId++;
+			startAttTime = Time.time;
 			IsIng = true;
 			StartCoroutine (AttackQueue ());
+			return;
+		}
+		if (Time.time - startAttTime > animationPlayer.length / 2)
+		{
+			startAttTime = Time.time;
+			attckId++;
 		}
 	}
 
@@ -110,14 +117,10 @@ public class PlayerController : MonoBehaviour {
 		for (int i = (int)Clip.Attack1; i <= Mathf.Min (attckId, maxAttackCount - 1) + (int)Clip.Attack1; i++)
 		{
 			animationPlayer.Play ((Clip)i);
-			isAttMove = true;
-			yield return new WaitForSeconds (animationPlayer.length / 2);
-			canResponse = false;
-			yield return new WaitForSeconds (animationPlayer.length / 2);
+			yield return new WaitForSeconds (animationPlayer.length);
 		}
-		attckId = 0;
+		attckId = -1;
 		IsIng = false;
-		canResponse = true;
 	}
 
 	void OnGUI ()
@@ -126,6 +129,7 @@ public class PlayerController : MonoBehaviour {
 		{
 			if (GUILayout.Button ("spell" + i.ToString()))
 			{
+				animationPlayer.Play (Clip.Spell1);
 				spellController.shootSpell1 (fpsController.motor);
 			}
 		}

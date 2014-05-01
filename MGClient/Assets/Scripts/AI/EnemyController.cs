@@ -10,6 +10,7 @@ public class EnemyController : MonoBehaviour {
 
 	private NavMeshAgent nav;
 	private AnimationPlayer animationPlayer;
+	private CharacterController characterController;
 	//private bool isBack = false;
 
 	void Start () 
@@ -18,6 +19,7 @@ public class EnemyController : MonoBehaviour {
 
 		nav = GetComponent<NavMeshAgent>();
 		animationPlayer = GetComponent<AnimationPlayer>();
+		characterController = GetComponent<CharacterController>();
 		enemys.Add (this);
 		animationPlayer.animationEventDelegate += animationEventDelegate;
 	}
@@ -40,6 +42,11 @@ public class EnemyController : MonoBehaviour {
 //		{
 //			transform.position = Vector3.Lerp (transform.position, dir, Time.time - startTime);
 //		}
+		if (target)
+		{
+			Vector3 forward = target.position - transform.position;
+			transform.forward  =new Vector3 (forward.x, 0, forward.z);
+		}
 
 		nav.enabled = !animationPlayer.dontMove;
 		if (animationPlayer.dontMove)
@@ -69,16 +76,18 @@ public class EnemyController : MonoBehaviour {
 		animationPlayer.Play (Clip.Hit);
 		colorReset (Color.white);
 		startTime = Time.time;
-		dir = (transform.position - attacker.position).normalized * 2 + transform.position;
+		dir = (transform.position - attacker.position).normalized;// * 2 + transform.position;
+//		Debug.Log (dir);
 		CancelInvoke ("ResetBack");
 		Invoke ("ResetColor", 0.1f);
-		InvokeRepeating ("UpdateBack", 0,  MGMath.UPDATE_RATE);
+		//InvokeRepeating ("UpdateBack", 0,  MGMath.UPDATE_RATE);
 		Invoke ("ResetBack", 0.1f);
 	}
 
 	void UpdateBack ()
 	{
-		MGMath.UpdateMove (startTime, transform, dir);
+		//characterController.SimpleMove (new Vector3 (dir.x, 0, dir.z));
+		//MGMath.UpdateMove (startTime, transform, dir);
 		//transform.position = Vector3.Lerp (transform.position, dir, Time.time - startTime);
 	}
 

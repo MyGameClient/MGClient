@@ -7,6 +7,7 @@ public enum Clip
 	Run,
 	Attack1,
 	Attack2,
+	Attack3,
 	Hit,
 	Fall,
 	Die,
@@ -90,6 +91,10 @@ public class AnimationPlayer : MonoBehaviour {
 		animation["Hit"].speed = 2;
 		animation["Attack1"].speed = 2;
 		animation["Attack2"].speed = 2;
+		if (animation["Attack3"] != null)
+		{
+			animation["Attack3"].speed = 2;
+		}
 	}
 
 	void Update ()

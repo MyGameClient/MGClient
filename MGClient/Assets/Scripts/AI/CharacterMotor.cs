@@ -188,6 +188,13 @@ public class CharacterMotor : MonoBehaviour {
 	private Transform tr;
 	
 	private CharacterController  controller ;
+
+	public CharacterController  characterController
+	{
+		get{
+			return controller;
+		}
+	}
 	
 	void Awake () {
 		controller = GetComponent <CharacterController>();
@@ -473,7 +480,7 @@ public class CharacterMotor : MonoBehaviour {
 	}
 	
 	void OnControllerColliderHit (ControllerColliderHit hit) {
-		if (hit.normal.y > 0 && hit.normal.y > groundNormal.y && hit.moveDirection.y < 0) {
+		/*if (hit.normal.y > 0 && hit.normal.y > groundNormal.y && hit.moveDirection.y < 0) {
 			if ((hit.point - movement.lastHitPoint).sqrMagnitude > 0.001 || lastGroundNormal == Vector3.zero)
 				groundNormal = hit.normal;
 			else
@@ -482,7 +489,7 @@ public class CharacterMotor : MonoBehaviour {
 			movingPlatform.hitPlatform = hit.collider.transform;
 			movement.hitPoint = hit.point;
 			movement.frameVelocity = Vector3.zero;
-		}
+		}*/
 	}
 	
 	private IEnumerator SubtractNewPlatformVelocity () {
