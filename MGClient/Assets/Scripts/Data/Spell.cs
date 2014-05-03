@@ -4,6 +4,13 @@ using System.Collections;
 
 public class Spell
 {
+	public enum SpellType
+	{
+		Spell1,
+		Spell2,
+		Spell3
+	}
+
 	private const float DMG_ADD = 0.2f;
 
 	[DefaultValue(null)]

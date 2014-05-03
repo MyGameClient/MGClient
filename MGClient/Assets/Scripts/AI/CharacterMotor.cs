@@ -480,16 +480,19 @@ public class CharacterMotor : MonoBehaviour {
 	}
 	
 	void OnControllerColliderHit (ControllerColliderHit hit) {
-		/*if (hit.normal.y > 0 && hit.normal.y > groundNormal.y && hit.moveDirection.y < 0) {
-			if ((hit.point - movement.lastHitPoint).sqrMagnitude > 0.001 || lastGroundNormal == Vector3.zero)
-				groundNormal = hit.normal;
-			else
-				groundNormal = lastGroundNormal;
-			
-			movingPlatform.hitPlatform = hit.collider.transform;
-			movement.hitPoint = hit.point;
-			movement.frameVelocity = Vector3.zero;
-		}*/
+
+//		Debug.Log (hit.transform);
+
+//		if (hit.normal.y > 0 && hit.normal.y > groundNormal.y && hit.moveDirection.y < 0) {
+//			if ((hit.point - movement.lastHitPoint).sqrMagnitude > 0.001 || lastGroundNormal == Vector3.zero)
+//				groundNormal = hit.normal;
+//			else
+//				groundNormal = lastGroundNormal;
+//			
+//			movingPlatform.hitPlatform = hit.collider.transform;
+//			movement.hitPoint = hit.point;
+//			movement.frameVelocity = Vector3.zero;
+//		}
 	}
 	
 	private IEnumerator SubtractNewPlatformVelocity () {

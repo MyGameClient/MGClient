@@ -38,17 +38,22 @@ public class EnemyController : MonoBehaviour {
 	// Update is called once per frame
 	void Update () 
 	{
-//		if (isBack)
-//		{
-//			transform.position = Vector3.Lerp (transform.position, dir, Time.time - startTime);
-//		}
 		if (target)
 		{
 			Vector3 forward = target.position - transform.position;
-			transform.forward  =new Vector3 (forward.x, 0, forward.z);
+			if (forward.x == 0 && forward.z == 0)
+			{
+			}
+			else if (animationPlayer.isFall == false)
+			{
+				transform.forward  =new Vector3 (forward.x, 0, forward.z);
+			}
 		}
 
-		nav.enabled = !animationPlayer.dontMove;
+		if (animationPlayer.dontMove)
+		{
+			nav.Stop ();
+		}
 		if (animationPlayer.dontMove)
 		{
 			return;
@@ -66,28 +71,42 @@ public class EnemyController : MonoBehaviour {
 		else
 		{
 			animationPlayer.Play (Clip.Idle);
+			//animationPlayer.Play (Clip.Attack1);
 		}
 	}
 
 	private Vector3 dir;
 	private float startTime = 0;
-	public void HitTarget (Transform attacker)
+	public void HitTarget (PlayerController attacker)
 	{
-		animationPlayer.Play (Clip.Hit);
+		if (animationPlayer.isFall)
+		{
+			return;
+		}
+		Clip c = Clip.Hit;
+		float distance = 1;
+		if (attacker.animationPlayer.clip == Clip.Attack3 || attacker.animationPlayer.clip == Clip.Spell1)
+		{
+			c = Clip.Fall;
+			distance = 5;
+		}
+		//TODO:
+		ObjectPool.Instance.LoadObject ("EF/EF001", transform.position);
+		animationPlayer.Play (c);
 		colorReset (Color.white);
 		startTime = Time.time;
-		dir = (transform.position - attacker.position).normalized;// * 2 + transform.position;
-//		Debug.Log (dir);
+		dir = (transform.position - attacker.transform.position).normalized * distance + transform.position;
 		CancelInvoke ("ResetBack");
 		Invoke ("ResetColor", 0.1f);
-		//InvokeRepeating ("UpdateBack", 0,  MGMath.UPDATE_RATE);
+		nav.Stop();
+		InvokeRepeating ("UpdateBack", 0,  MGMath.UPDATE_RATE);
 		Invoke ("ResetBack", 0.1f);
 	}
 
 	void UpdateBack ()
 	{
 		//characterController.SimpleMove (new Vector3 (dir.x, 0, dir.z));
-		//MGMath.UpdateMove (startTime, transform, dir);
+		MGMath.UpdateMove (startTime, transform, dir);
 		//transform.position = Vector3.Lerp (transform.position, dir, Time.time - startTime);
 	}
 

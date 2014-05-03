@@ -90,10 +90,17 @@ public class AnimationPlayer : MonoBehaviour {
 	{
 		animation["Hit"].speed = 2;
 		animation["Attack1"].speed = 2;
-		animation["Attack2"].speed = 2;
+		if (animation["Attack2"] != null)
+		{
+			animation["Attack2"].speed = 2;
+		}
 		if (animation["Attack3"] != null)
 		{
 			animation["Attack3"].speed = 2;
+		}
+		if (animation["Spell1"] != null)
+		{
+			animation["Spell1"].speed = 8;
 		}
 	}
 

@@ -25,6 +25,11 @@ public class ObjectPool {
 
 	public GameObject LoadObject (string path)
 	{
+		return LoadObject (path, Vector3.zero);
+	}
+
+	public GameObject LoadObject (string path, Vector3 pos)
+	{
 		List<GameObject> gos = null;
 		GameObject go;
 		if (objects.TryGetValue (path, out gos) == false)
@@ -36,12 +41,14 @@ public class ObjectPool {
 			if (g.activeSelf == false)
 			{
 				g.SetActive (true);
+				g.transform.position = pos;
 				return g;
 			}
 		}
 
-		go = AssetLoader.instance.getIdByPrefabs (path);//Resources.Load (path, typeof(GameObject)) as GameObject;
+		go = /*AssetLoader.instance.getIdByPrefabs (path);*/Resources.Load (path, typeof(GameObject)) as GameObject;
 		go = GameObject.Instantiate (go) as GameObject;//NGUITools.AddChild(go);
+		go.transform.position = pos;
 		gos.Add (go);
 		objects[path] = gos;
 		return go;
